@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { motion, useScroll, useTransform, MotionValue } from 'framer-motion';
 import FadeIn from '../components/FadeIn';
 
@@ -35,19 +35,18 @@ const experiences = [
   }
 ];
 
-const SPACING = 200; // pixels between each item
-const TOTAL_HEIGHT = (experiences.length - 1) * SPACING;
-
 const TimelineItem = ({ 
   exp, 
   index, 
   progress, 
-  total 
+  total,
+  spacing
 }: { 
   exp: typeof experiences[0], 
   index: number, 
   progress: MotionValue<number>, 
-  total: number 
+  total: number,
+  spacing: number
 }) => {
   const isEven = index % 2 === 0;
 
@@ -73,7 +72,7 @@ const TimelineItem = ({
 
   return (
     <motion.div 
-      style={{ opacity, scale, top: index * SPACING }} 
+      style={{ opacity, scale, top: index * spacing }} 
       className="absolute w-full flex items-start z-20"
     >
       {/* MOBILE LAYOUT: All right-aligned */}
@@ -140,27 +139,36 @@ const TimelineItem = ({
 
 const ExperienceEducationSection = () => {
   const containerRef = useRef<HTMLDivElement>(null);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  // Use much larger spacing on mobile because text wraps and becomes taller
+  const spacing = isMobile ? 320 : 200;
+  const totalHeight = (experiences.length - 1) * spacing;
   
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ['start start', 'end end']
   });
 
-  // Fixed focal point near the top of the screen (e.g. 35vh)
   const FOCUS_VH = 35;
 
-  // The entire timeline block translates UPWARDS out of the bottom of the screen
-  const y = useTransform(scrollYProgress, [0, 1], [0, -TOTAL_HEIGHT]);
-  
-  // The bright "drawing" line dynamically grows downwards inside the sliding container,
-  // connecting the very first dot to the currently active dot perfectly.
-  const brightLineHeight = useTransform(scrollYProgress, [0, 1], [0, TOTAL_HEIGHT]);
+  const y = useTransform(scrollYProgress, [0, 1], [0, -totalHeight]);
+  const brightLineHeight = useTransform(scrollYProgress, [0, 1], [0, totalHeight]);
+
+  // Adjust gap dynamically: Mobile text wraps and takes more space, so the next section needs to be pushed down more.
+  const gapMargin = isMobile ? 'calc(-65vh + 260px)' : 'calc(-65vh + 180px)';
 
   return (
-    <section id="experience" className="bg-[#0C0C0C] relative z-30" style={{ marginBottom: 'calc(-65vh + 180px)' }}>
+    <section id="experience" className="bg-[#0C0C0C] relative z-30" style={{ marginBottom: gapMargin }}>
       <div ref={containerRef} className="h-[250vh]">
         
-        {/* Sticky Viewport */}
         <div className="sticky top-0 h-screen w-full overflow-hidden flex flex-col justify-center rounded-t-[40px] sm:rounded-t-[50px] md:rounded-t-[60px] bg-[#0C0C0C]">
           
           <div className="absolute top-12 sm:top-20 left-0 w-full px-6 sm:px-10 z-30 pointer-events-none">
@@ -177,13 +185,13 @@ const ExperienceEducationSection = () => {
           <div className="absolute left-0 w-full" style={{ top: `${FOCUS_VH}vh` }}>
             <motion.div style={{ y }} className="relative w-full max-w-5xl mx-auto h-0 z-20">
               
-              {/* Background Dim Line spanning exactly the distance between first and last dot */}
+              {/* Background Dim Line */}
               <div 
                 className="absolute left-[30px] md:left-1/2 -translate-x-1/2 w-[2px] bg-[#D7E2EA]/10 z-0" 
-                style={{ top: '20px', height: `${TOTAL_HEIGHT}px` }} 
+                style={{ top: '20px', height: `${totalHeight}px` }} 
               />
 
-              {/* Bright Active Line tracking exactly from first dot to active dot */}
+              {/* Bright Active Line */}
               <motion.div 
                 style={{ height: brightLineHeight }}
                 className="absolute left-[30px] md:left-1/2 -translate-x-1/2 top-[20px] w-[2px] bg-[#D7E2EA] shadow-[0_0_15px_#D7E2EA] z-10 origin-top"
@@ -196,13 +204,14 @@ const ExperienceEducationSection = () => {
                   index={index} 
                   progress={scrollYProgress} 
                   total={experiences.length} 
+                  spacing={spacing}
                 />
               ))}
 
               {/* Dividing line to cap off the timeline */}
               <div 
                 className="absolute left-[30px] md:left-1/2 -translate-x-1/2 h-[1px] bg-gradient-to-r from-transparent via-[#D7E2EA]/30 to-transparent w-[80%] max-w-[600px]"
-                style={{ top: `${TOTAL_HEIGHT + 220}px` }} 
+                style={{ top: `${totalHeight + (isMobile ? 300 : 220)}px` }} 
               />
             </motion.div>
           </div>
