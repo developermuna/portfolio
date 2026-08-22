@@ -157,7 +157,7 @@ const ExperienceEducationSection = () => {
   const brightLineHeight = useTransform(scrollYProgress, [0, 1], [0, TOTAL_HEIGHT]);
 
   return (
-    <section id="experience" className="bg-[#0C0C0C] relative z-30 -mb-[55vh]">
+    <section id="experience" className="bg-[#0C0C0C] relative z-30" style={{ marginBottom: 'calc(-65vh + 180px)' }}>
       <div ref={containerRef} className="h-[250vh]">
         
         {/* Sticky Viewport */}
