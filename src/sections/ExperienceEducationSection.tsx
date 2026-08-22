@@ -163,7 +163,7 @@ const ExperienceEducationSection = () => {
   const brightLineHeight = useTransform(scrollYProgress, [0, 1], [0, totalHeight]);
 
   // Adjust gap dynamically: Mobile text wraps and takes more space, so the next section needs to be pushed down more.
-  const gapMargin = isMobile ? 'calc(-65vh + 260px)' : 'calc(-65vh + 180px)';
+  const gapMargin = isMobile ? 'calc(-65vh + 320px)' : 'calc(-65vh + 240px)';
 
   return (
     <section id="experience" className="bg-[#0C0C0C] relative z-30" style={{ marginBottom: gapMargin }}>
