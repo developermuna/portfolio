@@ -2,7 +2,7 @@ import { useRef, useEffect, useState } from 'react';
 import { useScroll, useTransform, motion } from 'framer-motion';
 import FadeIn from '../components/FadeIn';
 
-const TOTAL_FRAMES = 92;
+const TOTAL_FRAMES = 110;
 
 const HeroSection = () => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -13,13 +13,18 @@ const HeroSection = () => {
   // Preload images
   useEffect(() => {
     const loadedImages: HTMLImageElement[] = [];
+    const INITIAL_FRAMES = 15;
     let loadedCount = 0;
-
+    
+    // Create all image objects so the array is full size
     for (let i = 1; i <= TOTAL_FRAMES; i++) {
-      const img = new Image();
-      // Format number to 4 digits: 0001, 0002...
-      const frameNumber = String(i).padStart(4, '0');
-      img.src = `/my-video/${frameNumber}.jpg`;
+      loadedImages.push(new Image());
+    }
+
+    const loadFrame = (index: number) => {
+      if (index >= TOTAL_FRAMES) return;
+      const img = loadedImages[index];
+      const frameNumber = String(index + 1).padStart(3, '0');
       
       img.onload = () => {
         loadedCount++;
@@ -29,8 +34,22 @@ const HeroSection = () => {
         }));
       };
       
-      loadedImages.push(img);
+      img.src = `/myVideoFrame/frame_${frameNumber}_no_bg.png`;
+    };
+
+    // Phase 1: Load initial frames immediately
+    for (let i = 0; i < INITIAL_FRAMES; i++) {
+      loadFrame(i);
     }
+    
+    // Phase 2: Load remaining frames asynchronously after a small delay
+    setTimeout(() => {
+      for (let i = INITIAL_FRAMES; i < TOTAL_FRAMES; i++) {
+        // Stagger loading slightly
+        setTimeout(() => loadFrame(i), (i - INITIAL_FRAMES) * 20);
+      }
+    }, 500);
+
     setImages(loadedImages);
   }, []);
 
@@ -41,7 +60,8 @@ const HeroSection = () => {
   });
 
   // Map scroll progress (0-1) to frame index (0-100)
-  const frameIndex = useTransform(scrollYProgress, [0, 1], [0, TOTAL_FRAMES - 1]);
+  // Hold the last frame for the final 15% of the scroll to create a pause effect
+  const frameIndex = useTransform(scrollYProgress, [0, 0.85, 1], [0, TOTAL_FRAMES - 1, TOTAL_FRAMES - 1]);
 
   // Draw current frame to canvas using continuous requestAnimationFrame loop
   useEffect(() => {
@@ -63,49 +83,24 @@ const HeroSection = () => {
             const context = canvas.getContext('2d', { willReadFrequently: true });
             
             if (context) {
-              // OPTIMIZATION 1: Set canvas internal resolution.
-              // Downscale on mobile for massive performance boost (4x fewer pixels to process)
-              const isMobile = window.innerWidth < 768;
-              const scale = isMobile ? 0.5 : 1;
-              const targetWidth = Math.round(img.naturalWidth * scale);
-              const targetHeight = Math.round(img.naturalHeight * scale);
+              // Render at full native HD resolution, accounting for Retina/High-DPI displays
+              const dpr = window.devicePixelRatio || 1;
+              const targetWidth = Math.round(img.naturalWidth * dpr);
+              const targetHeight = Math.round(img.naturalHeight * dpr);
 
               if (canvas.width !== targetWidth) {
                 canvas.width = targetWidth;
                 canvas.height = targetHeight;
               }
+              
+              // Maximize sharpness and clarity
+              context.imageSmoothingEnabled = true;
+              context.imageSmoothingQuality = 'high';
 
               context.clearRect(0, 0, canvas.width, canvas.height);
               context.drawImage(img, 0, 0, canvas.width, canvas.height);
               
-              try {
-                // OPTIMIZATION 2: Fast Luma Keying
-                const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
-                const data = imageData.data;
-                const len = data.length;
-                
-                for (let i = 0; i < len; i += 4) {
-                  const r = data[i];
-                  const g = data[i+1];
-                  const b = data[i+2];
-                  
-                  // Advanced Luma Keying: Smoothstep transition for a perfectly clear edge
-                  const maxColor = Math.max(r, g, b);
-                  if (maxColor < 32) {
-                    data[i+3] = 0; // Completely remove background JPEG noise
-                  } else if (maxColor < 48) {
-                    // Smoothstep interpolation for high-quality anti-aliasing on the edges
-                    const t = (maxColor - 32) / 16;
-                    data[i+3] = Math.round(t * t * (3 - 2 * t) * 255);
-                  } else {
-                    data[i+3] = 255; // Keep the subject (hair, face, etc.) 100% solidly opaque
-                  }
-                }
-                context.putImageData(imageData, 0, 0);
-                lastDrawnIndex = index;
-              } catch (e) {
-                lastDrawnIndex = index;
-              }
+              lastDrawnIndex = index;
             }
           }
         }
@@ -119,7 +114,7 @@ const HeroSection = () => {
   }, [images, frameIndex]);
 
   return (
-    <section ref={containerRef} className="h-[300vh] relative z-10 bg-[#0C0C0C]">
+    <section ref={containerRef} className="h-[120vh] sm:h-[300vh] relative z-10 bg-[#0C0C0C]">
       {/* Sticky Viewport Container */}
       <div className="sticky top-0 h-screen flex flex-col pt-20 sm:pt-24 overflow-hidden">
         
@@ -228,9 +223,9 @@ const HeroSection = () => {
         {/* Removed mix-blend-screen because we are now making the black pixels genuinely transparent via Luma Keying! */}
         <div className="absolute inset-0 pt-20 sm:pt-24 z-10 flex justify-center items-center pointer-events-none">
           {/* Show loading state until enough images are loaded */}
-          {imagesLoaded < TOTAL_FRAMES * 0.2 && (
+          {imagesLoaded < 15 && (
             <div className="absolute inset-0 flex items-center justify-center text-[#D7E2EA]/50 font-medium tracking-widest text-sm uppercase z-10">
-              Loading... {Math.round((imagesLoaded / TOTAL_FRAMES) * 100)}%
+              Loading... {Math.round((imagesLoaded / 15) * 100)}%
             </div>
           )}
           
@@ -238,7 +233,7 @@ const HeroSection = () => {
             ref={canvasRef}
             width={1920}
             height={1080}
-            className={`w-full h-full object-cover object-top sm:object-[center_10%] grayscale transition-opacity duration-500 ${imagesLoaded >= TOTAL_FRAMES * 0.2 ? 'opacity-100' : 'opacity-0'}`}
+            className={`w-full h-full object-cover object-top sm:object-[center_10%] grayscale transition-opacity duration-500 ${imagesLoaded >= 15 ? 'opacity-100' : 'opacity-0'}`}
           />
         </div>
 

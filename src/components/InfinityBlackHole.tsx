@@ -1,19 +1,10 @@
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { motion } from 'framer-motion';
 
 const InfinityBlackHole = () => {
-  const { scrollYProgress } = useScroll();
-  
-  // Animate from the top-left of the Hero section (negative offsets) to its natural DOM position in About section (0 offset)
-  const xOffset = useTransform(scrollYProgress, [0, 0.15], ['-70vw', '0vw']);
-  const yOffset = useTransform(scrollYProgress, [0, 0.15], ['-200vh', '0vh']);
-  const scale = useTransform(scrollYProgress, [0, 0.15], [0.3, 1.8]);
-  const rotate = useTransform(scrollYProgress, [0, 0.15], [0, 20]);
-  const opacity = useTransform(scrollYProgress, [0, 0.15], [0.3, 0.3]);
-
   return (
     <motion.div 
-      className="relative w-full h-full min-h-[400px] flex items-center justify-center"
-      style={{ x: xOffset, y: yOffset, scale, rotate, opacity, zIndex: 50 }}
+      className="relative w-full h-full min-h-[400px] flex items-center justify-center -rotate-[20deg]"
+      style={{ zIndex: 50 }}
     >
       
       {/* Background GIF of Black Hole */}

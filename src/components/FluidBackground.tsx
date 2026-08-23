@@ -8,17 +8,17 @@ const FluidBackground: React.FC = () => {
   useEffect(() => {
     if (canvasRef.current) {
       WebGLFluid(canvasRef.current, {
-        IMMEDIATE: true,
+        IMMEDIATE: false,
         TRIGGER: 'hover',
-        SIM_RESOLUTION: 128,
-        DYE_RESOLUTION: 512,
+        SIM_RESOLUTION: window.innerWidth < 768 ? 64 : 128,
+        DYE_RESOLUTION: window.innerWidth < 768 ? 256 : 512,
         CAPTURE_RESOLUTION: 512,
-        DENSITY_DISSIPATION: 3,
-        VELOCITY_DISSIPATION: 2,
+        DENSITY_DISSIPATION: window.innerWidth < 768 ? 4 : 3,
+        VELOCITY_DISSIPATION: window.innerWidth < 768 ? 3 : 2,
         PRESSURE: 0.1,
         PRESSURE_ITERATIONS: 20,
         CURL: 5,
-        SPLAT_RADIUS: 0.05,
+        SPLAT_RADIUS: window.innerWidth < 768 ? 0.02 : 0.05,
         SPLAT_FORCE: 8000,
         SHADING: true,
         COLORFUL: false, // Monochromatic default
@@ -31,56 +31,61 @@ const FluidBackground: React.FC = () => {
       });
 
       // Forward pointer events to the canvas since it has pointer-events: none
-      const handlePointerMove = (e: PointerEvent | MouseEvent) => {
+      const handlePointer = (e: PointerEvent | MouseEvent, type: string) => {
         if (!canvasRef.current) return;
+        if (e.target instanceof Element && e.target.closest('a, button, [role="button"], nav, .group')) return;
         
-        // Check if cursor is over a button, link, or their container padding
-        if (e.target instanceof Element) {
-          if (e.target.closest('a, button, [role="button"], nav, .group')) {
-            return; // Skip drawing fluid
-          }
-        }
-        
-        // Dispatch standard mouse event
-        const mouseEvent = new MouseEvent('mousemove', {
+        canvasRef.current.dispatchEvent(new MouseEvent(type, {
           clientX: e.clientX,
           clientY: e.clientY,
           bubbles: true
-        });
-        canvasRef.current.dispatchEvent(mouseEvent);
+        }));
       };
 
-      const handleTouchMove = (e: TouchEvent) => {
+      const handleTouch = (e: TouchEvent, type: string) => {
         if (!canvasRef.current || e.touches.length === 0) return;
-
-        // Check if touch is over a button, link, or their container padding
-        if (e.target instanceof Element) {
-          if (e.target.closest('a, button, [role="button"], nav, .group')) {
-            return; // Skip drawing fluid
-          }
-        }
-
+        if (type === 'mousedown' && e.target instanceof Element && e.target.closest('a, button, [role="button"], nav, .group')) return;
+        
         try {
           const touch = e.touches[0];
-          const mouseEvent = new MouseEvent('mousemove', {
+          canvasRef.current.dispatchEvent(new MouseEvent(type, {
             clientX: touch.clientX,
             clientY: touch.clientY,
             bubbles: true
-          });
-          canvasRef.current.dispatchEvent(mouseEvent);
+          }));
         } catch {
-          // Ignore fallback touch
+          // Ignore
         }
       };
 
-      window.addEventListener('pointermove', handlePointerMove);
-      window.addEventListener('mousemove', handlePointerMove);
-      window.addEventListener('touchmove', handleTouchMove);
+      const onPointerMove = (e: any) => handlePointer(e, 'mousemove');
+      const onPointerDown = (e: any) => handlePointer(e, 'mousedown');
+      const onPointerUp = (e: any) => handlePointer(e, 'mouseup');
+      
+      const onTouchMove = (e: any) => handleTouch(e, 'mousemove');
+      const onTouchStart = (e: any) => handleTouch(e, 'mousedown');
+      const onTouchEnd = () => {
+        if (canvasRef.current) {
+          canvasRef.current.dispatchEvent(new MouseEvent('mouseup', { bubbles: true }));
+        }
+      };
+
+      window.addEventListener('mousemove', onPointerMove);
+      window.addEventListener('mousedown', onPointerDown);
+      window.addEventListener('mouseup', onPointerUp);
+      
+      window.addEventListener('touchmove', onTouchMove, { passive: false });
+      window.addEventListener('touchstart', onTouchStart, { passive: false });
+      window.addEventListener('touchend', onTouchEnd);
       
       return () => {
-        window.removeEventListener('pointermove', handlePointerMove);
-        window.removeEventListener('mousemove', handlePointerMove);
-        window.removeEventListener('touchmove', handleTouchMove);
+        window.removeEventListener('mousemove', onPointerMove);
+        window.removeEventListener('mousedown', onPointerDown);
+        window.removeEventListener('mouseup', onPointerUp);
+        
+        window.removeEventListener('touchmove', onTouchMove);
+        window.removeEventListener('touchstart', onTouchStart);
+        window.removeEventListener('touchend', onTouchEnd);
       };
     }
   }, []);

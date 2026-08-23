@@ -128,41 +128,41 @@ const TestimonialsSection = () => {
       id="testimonials"
       className="bg-white rounded-t-[40px] sm:rounded-t-[50px] md:rounded-t-[60px]
         -mt-10 sm:-mt-12 md:-mt-14 relative z-50
-        px-5 sm:px-8 md:px-10 py-16 sm:py-20 md:py-24 overflow-hidden flex flex-col items-center"
+        px-5 sm:px-8 md:px-10 py-10 sm:py-20 md:py-24 overflow-hidden flex flex-col items-center"
     >
       {/* Header & Rating Summary Bar */}
-      <div className="w-full max-w-[1200px] flex flex-col md:flex-row items-center md:items-end justify-between gap-8 mb-12 sm:mb-16">
+      <div className="w-full max-w-[1200px] flex flex-col md:flex-row items-center md:items-end justify-between gap-6 sm:gap-8 mb-8 sm:mb-16">
         <FadeIn delay={0} y={20} className="text-center md:text-left">
-          <h2 className="font-kanit font-black leading-none tracking-tight text-[10vw] sm:text-[7vw] md:text-[6vw] lg:text-[5vw] uppercase text-[#0C0C0C] mb-4">
+          <h2 className="font-kanit font-black leading-none tracking-tight text-[10vw] sm:text-[7vw] md:text-[6vw] lg:text-[5vw] uppercase text-[#0C0C0C] mb-2 sm:mb-4">
             Customer Stories
           </h2>
-          <p className="text-[#0C0C0C]/60 font-light text-sm sm:text-base lg:text-lg leading-relaxed max-w-xl mb-4">
+          <p className="text-[#0C0C0C]/60 font-light text-sm sm:text-base lg:text-lg leading-relaxed max-w-xl mb-2 sm:mb-4">
             Hear from people I've collaborated with.
           </p>
         </FadeIn>
 
         <FadeIn delay={0.1} y={20}>
-          <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6 bg-[#0C0C0C]/[0.02] border border-[#0C0C0C]/10 rounded-full px-6 py-3 shadow-sm">
-            <div className="flex items-center gap-3">
-              <span className="font-bold text-2xl text-[#0C0C0C] leading-none">{avgRating}</span>
+          <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-4 bg-[#0C0C0C]/[0.02] border border-[#0C0C0C]/10 rounded-full px-4 py-2 shadow-sm scale-90 sm:scale-100 origin-center md:origin-right">
+            <div className="flex items-center gap-2">
+              <span className="font-bold text-lg text-[#0C0C0C] leading-none">{avgRating}</span>
               <div className="flex text-[#F5B50A]">
                 {[...Array(5)].map((_, i) => (
-                  <Star key={i} size={18} fill={i < Math.round(Number(avgRating)) ? "currentColor" : "none"} strokeWidth={1.5} />
+                  <Star key={i} size={14} fill={i < Math.round(Number(avgRating)) ? "currentColor" : "none"} strokeWidth={1.5} />
                 ))}
               </div>
             </div>
             
-            <div className="hidden sm:block w-[1px] h-8 bg-[#0C0C0C]/10" />
+            <div className="hidden sm:block w-[1px] h-6 bg-[#0C0C0C]/10" />
             
-            <div className="text-[#0C0C0C]/60 text-sm font-medium">
+            <div className="text-[#0C0C0C]/60 text-xs font-medium">
               Based on {reviews.length}+ reviews
             </div>
 
             <button
               onClick={() => setIsModalOpen(true)}
-              className="flex items-center gap-2 bg-[#0C0C0C] text-white px-5 py-2 rounded-full font-medium text-sm hover:bg-[#0C0C0C]/80 transition-colors ml-2"
+              className="flex items-center gap-1.5 bg-[#0C0C0C] text-white px-4 py-1.5 rounded-full font-medium text-xs hover:bg-[#0C0C0C]/80 transition-colors ml-1 sm:ml-2"
             >
-              <Plus size={16} />
+              <Plus size={14} />
               Add Review
             </button>
           </div>
@@ -196,28 +196,28 @@ const TestimonialsSection = () => {
                 damping: 25,
                 mass: 1,
               }}
-              className={`absolute w-[85%] sm:w-[60%] md:w-[50%] h-full max-h-[300px] bg-white border border-[#0C0C0C]/10 rounded-3xl p-8 sm:p-10 flex flex-col justify-between
+              className={`absolute w-[85%] sm:w-[60%] md:w-[50%] h-full max-h-[220px] sm:max-h-[300px] bg-white border border-[#0C0C0C]/10 rounded-2xl sm:rounded-3xl p-5 sm:p-10 flex flex-col justify-between
                 ${isActive ? 'shadow-[0_20px_50px_-12px_rgba(0,0,0,0.1)] cursor-default' : 'shadow-none cursor-pointer hover:border-[#0C0C0C]/30 transition-colors'}`}
             >
-              <div className="flex flex-col gap-6">
+              <div className="flex flex-col gap-3 sm:gap-6">
                 <div className="flex text-[#F5B50A]">
                   {[...Array(5)].map((_, i) => (
-                    <Star key={i} size={20} fill={i < review.rating ? "currentColor" : "none"} strokeWidth={1.5} />
+                    <Star key={i} size={16} fill={i < review.rating ? "currentColor" : "none"} strokeWidth={1.5} className="sm:w-5 sm:h-5" />
                   ))}
                 </div>
                 
-                <p className="font-medium text-lg sm:text-xl lg:text-2xl leading-relaxed text-[#0C0C0C] line-clamp-3">
+                <p className="font-medium text-sm sm:text-xl lg:text-2xl leading-relaxed text-[#0C0C0C] line-clamp-3">
                   "{review.text}"
                 </p>
               </div>
 
-              <div className="flex items-center gap-4 border-t border-[#0C0C0C]/10 pt-6 mt-6">
-                <div className="w-10 h-10 rounded-full bg-[#0C0C0C] flex items-center justify-center text-white font-bold text-sm flex-shrink-0">
+              <div className="flex items-center gap-3 sm:gap-4 border-t border-[#0C0C0C]/10 pt-3 sm:pt-6 mt-3 sm:mt-6">
+                <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-[#0C0C0C] flex items-center justify-center text-white font-bold text-xs sm:text-sm flex-shrink-0">
                   {review.name.charAt(0).toUpperCase()}
                 </div>
                 <div className="flex flex-col overflow-hidden">
-                  <span className="font-bold text-[#0C0C0C] truncate">{review.name}</span>
-                  <span className="text-[#0C0C0C]/50 text-xs font-medium uppercase tracking-wider">{review.date}</span>
+                  <span className="font-bold text-sm sm:text-base text-[#0C0C0C] truncate">{review.name}</span>
+                  <span className="text-[#0C0C0C]/50 text-[10px] sm:text-xs font-medium uppercase tracking-wider">{review.date}</span>
                 </div>
               </div>
             </motion.div>

@@ -117,8 +117,8 @@ const ExperienceEducationSection = () => {
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
-  // Use much larger spacing on mobile because text wraps and becomes taller
-  const spacing = isMobile ? 320 : 200;
+  // Use tighter spacing on mobile to reduce height
+  const spacing = isMobile ? 180 : 200;
   const totalHeight = (experiences.length - 1) * spacing;
   
   const { scrollYProgress } = useScroll({
@@ -131,16 +131,17 @@ const ExperienceEducationSection = () => {
   const y = useTransform(scrollYProgress, [0, 1], [0, -totalHeight]);
   const brightLineHeight = useTransform(scrollYProgress, [0, 1], [0, totalHeight]);
 
-  // Adjust gap dynamically: Mobile text wraps and takes more space, so the next section needs to be pushed down more.
-  const gapMargin = isMobile ? 'calc(-65vh + 320px)' : 'calc(-65vh + 240px)';
+  // Adjust gap dynamically
+  // For mobile, maintain a larger gap before the next section by making the negative margin less aggressive.
+  const gapMargin = isMobile ? 'calc(-65vh + 300px)' : 'calc(-65vh + 240px)';
 
   return (
     <section id="experience" className="bg-[#0C0C0C] relative z-30" style={{ marginBottom: gapMargin }}>
-      <div ref={containerRef} className="h-[250vh]">
+      <div ref={containerRef} className={isMobile ? "h-[200vh]" : "h-[250vh]"}>
         
         <div className="sticky top-0 h-screen w-full overflow-hidden flex flex-col justify-center rounded-t-[40px] sm:rounded-t-[50px] md:rounded-t-[60px] bg-[#0C0C0C]">
           
-          <div className="absolute top-12 sm:top-20 left-0 w-full px-6 sm:px-10 z-30 pointer-events-none">
+          <div className="absolute top-24 sm:top-32 left-0 w-full px-6 sm:px-10 z-30 pointer-events-none">
             <FadeIn delay={0} y={40}>
               <h2
                 className="hero-heading font-black uppercase text-center leading-none tracking-tight"
@@ -180,7 +181,7 @@ const ExperienceEducationSection = () => {
               {/* Dividing line to cap off the timeline */}
               <div 
                 className="absolute left-[30px] md:left-1/2 -translate-x-1/2 h-[1px] bg-gradient-to-r from-transparent via-[#D7E2EA]/30 to-transparent w-[80%] max-w-[600px]"
-                style={{ top: `${totalHeight + (isMobile ? 300 : 220)}px` }} 
+                style={{ top: `${totalHeight + (isMobile ? 160 : 220)}px` }} 
               />
             </motion.div>
           </div>

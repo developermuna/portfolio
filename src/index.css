@@ -10,11 +10,21 @@
   padding: 0;
 }
 
-html,
-body,
-#root {
+html {
+  overflow-x: hidden;
+}
+
+body {
+  width: 100%;
+  overflow-x: hidden;
   background: #0C0C0C;
   font-family: 'Kanit', sans-serif;
+  scroll-padding-top: 80px;
+}
+
+#root {
+  width: 100%;
+  overflow-x: hidden;
 }
 
 .hero-heading {
@@ -26,20 +36,11 @@ body,
 
 /* Custom Scrollbar */
 ::-webkit-scrollbar {
-  width: 4px;
-}
-
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-::-webkit-scrollbar-thumb {
-  background: #555;
-  border-radius: 4px;
-}
-
-::-webkit-scrollbar-button {
   display: none;
+}
+* {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
 }
 
 @media (pointer: fine) {

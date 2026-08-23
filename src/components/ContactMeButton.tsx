@@ -7,14 +7,14 @@ const ContactMeButton = () => {
   return (
     <motion.a
       href="#contact"
-      className="fixed bottom-6 right-6 md:bottom-10 md:right-10 z-[100] group cursor-pointer"
+      className="fixed bottom-6 right-6 md:bottom-10 md:right-10 z-[100000] group cursor-pointer"
       // Floating animation continuously going up and down
       animate={{ y: [0, -10, 0] }}
       transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
       whileHover={{ scale: 1.05 }}
       whileTap={{ scale: 0.95 }}
     >
-      <div className="relative px-6 py-3 h-[48px] flex items-center justify-center bg-[#0C0C0C] rounded-full shadow-2xl overflow-visible">
+      <div className="relative px-4 sm:px-6 py-3 h-[48px] flex items-center justify-center bg-[#0C0C0C] rounded-full shadow-2xl overflow-visible">
         
         {/* SVG Progress Border */}
         <svg 
@@ -52,7 +52,8 @@ const ContactMeButton = () => {
             <path d="M4 7.00005L10.2 11.65C11.2667 12.45 12.7333 12.45 13.8 11.65L20 7" />
             <rect x="3" y="5" width="18" height="14" rx="2" />
           </svg>
-          Contact Me
+          <span className="hidden sm:inline">Contact Me</span>
+          <span className="sm:hidden">Me</span>
         </span>
       </div>
     </motion.a>

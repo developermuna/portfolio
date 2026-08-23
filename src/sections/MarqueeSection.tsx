@@ -23,7 +23,7 @@ const MarqueeSection = () => {
   return (
     <section
       ref={sectionRef}
-      className="bg-[#0C0C0C] pt-2 pb-10 overflow-hidden"
+      className="bg-[#0C0C0C] pt-2 pb-0 sm:pb-10 overflow-hidden"
     >
       {/* Row 1 - moves RIGHT */}
       <div

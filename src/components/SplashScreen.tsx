@@ -6,7 +6,6 @@ interface SplashScreenProps {
 }
 
 const SplashScreen = ({ onComplete }: SplashScreenProps) => {
-  const [progress, setProgress] = useState(0);
   const [isVisible, setIsVisible] = useState(true);
   const [displayText, setDisplayText] = useState('');
   const fullText = "MUNA'S ERA";
@@ -27,28 +26,13 @@ const SplashScreen = ({ onComplete }: SplashScreenProps) => {
     }, 300);
 
     const duration = 1500; // 1.5 seconds total loading time
-    const intervalTime = 15; // 60fps update rate
-    const steps = duration / intervalTime;
-    let currentStep = 0;
-
-    const interval = setInterval(() => {
-      currentStep++;
-      // Smooth easing function (easeOutExpo) for the progress bar
-      const t = currentStep / steps;
-      const easedProgress = t === 1 ? 1 : 1 - Math.pow(2, -10 * t);
-      
-      setProgress(easedProgress * 100);
-
-      if (currentStep >= steps) {
-        clearInterval(interval);
-        setProgress(100);
-        // Slight pause at 100% before sliding out
-        setTimeout(() => setIsVisible(false), 200);
-      }
-    }, intervalTime);
+    
+    const finishTimeout = setTimeout(() => {
+      setIsVisible(false);
+    }, duration + 200);
 
     return () => {
-      clearInterval(interval);
+      clearTimeout(finishTimeout);
       clearTimeout(startDelay);
     };
   }, []);
@@ -88,27 +72,7 @@ const SplashScreen = ({ onComplete }: SplashScreenProps) => {
               />
             </h1>
 
-            {/* Progress Bar Container */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.4, delay: 0.1 }}
-              className="w-full flex flex-col items-center mt-2"
-            >
-              <div className="w-full h-[3px] bg-white/25 relative overflow-hidden rounded-full shadow-inner">
-                {/* Progress Bar Fill */}
-                <motion.div
-                  className="absolute top-0 left-0 h-full bg-white rounded-full shadow-[0_0_10px_rgba(255,255,255,0.9)]"
-                  style={{ width: `${progress}%` }}
-                />
-              </div>
-              <div className="w-full flex justify-between items-center mt-2 px-0.5">
-                <span className="text-[10px] uppercase tracking-[0.2em] text-[#D7E2EA]/40 font-mono">Loading</span>
-                <span className="text-[11px] font-mono text-[#D7E2EA]/80 font-medium tracking-wider">
-                  {Math.round(progress)}%
-                </span>
-              </div>
-            </motion.div>
+
           </div>
         </motion.div>
       )}

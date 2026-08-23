@@ -16,14 +16,11 @@ const AboutSection = () => {
       id="about"
       className="relative w-full bg-transparent text-[#D7E2EA]
         flex flex-col lg:flex-row items-center justify-center
-        py-16 px-6 sm:px-12 md:px-16 lg:px-20 lg:py-0
+        pt-4 pb-16 px-6 sm:px-12 md:px-16 lg:px-20 lg:py-0
         min-h-screen lg:h-screen lg:max-h-screen z-30"
     >
-      {/* Background glow effects */}
-      <div className="absolute top-1/4 left-1/4 w-[30vw] h-[30vw] bg-[#D7E2EA]/5 rounded-full blur-[100px] pointer-events-none" />
-      <div className="absolute bottom-0 right-1/4 w-[40vw] h-[40vw] bg-[#646973]/10 rounded-full blur-[120px] pointer-events-none" />
 
-      <div className="w-full max-w-[1400px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 h-full items-center">
+      <div className="w-full max-w-[1400px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 h-full items-center relative">
         
         {/* LEFT COLUMN: Typography & Content (7 cols on desktop) */}
         <div className="flex flex-col gap-6 sm:gap-8 lg:col-span-7 justify-center h-full lg:pr-10 xl:pr-20 relative z-40 pt-10 lg:pt-0">
@@ -60,16 +57,16 @@ const AboutSection = () => {
           </FadeIn>
         </div>
 
-        {/* RIGHT COLUMN: Visuals (5 cols on desktop) */}
-        <div className="relative w-full h-[50vh] lg:h-[75vh] lg:col-span-5 flex items-center justify-center lg:justify-end mt-10 lg:mt-0 z-10">
+        {/* RIGHT COLUMN: Visuals (Background on mobile, 5 cols on desktop) */}
+        <div className="absolute inset-0 lg:relative lg:inset-auto w-full h-full lg:h-[75vh] lg:col-span-5 flex items-center justify-center lg:justify-end z-0 lg:z-10 pointer-events-none lg:pointer-events-auto overflow-hidden lg:overflow-visible opacity-30 lg:opacity-100">
           
           {/* Black Hole Animation Container */}
-          <div className="relative w-full max-w-[400px] lg:max-w-[500px] h-[400px] sm:h-[500px]">
+          <div className="relative w-[150vw] sm:w-[100vw] lg:w-full max-w-[600px] lg:max-w-[500px] h-[150vw] sm:h-[100vw] lg:h-[500px] flex-shrink-0">
             <InfinityBlackHole />
           </div>
 
-          {/* Floating Tech Badges */}
-          <div className="absolute inset-0 z-20 pointer-events-none">
+          {/* Floating Tech Badges - Hide on mobile since it's background */}
+          <div className="absolute inset-0 z-20 pointer-events-none hidden lg:block">
             {techStack.map((tech, idx) => (
               <motion.div
                 key={tech.name}

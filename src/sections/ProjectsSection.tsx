@@ -1,8 +1,12 @@
-import { useRef } from 'react';
-import { motion, useScroll, useTransform, useMotionValue, useSpring } from 'framer-motion';
+import { useRef, useState, useEffect } from 'react';
+import { motion, useSpring, useTransform, useMotionValue } from 'framer-motion';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import FadeIn from '../components/FadeIn';
 
 import { projects } from '../data/portfolioData';
+
+gsap.registerPlugin(ScrollTrigger);
 
 const HorizontalProjectCard = ({ project }: { project: typeof projects[0] }) => {
   const ref = useRef<HTMLDivElement>(null);
@@ -97,66 +101,84 @@ const HorizontalProjectCard = ({ project }: { project: typeof projects[0] }) => 
 
 const ProjectsSection = () => {
   const containerRef = useRef<HTMLDivElement>(null);
+  const trackRef = useRef<HTMLDivElement>(null);
+  const [isMobile, setIsMobile] = useState(false);
   
-  // We track the scroll progress of the tall container
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-  });
+  useEffect(() => {
+    const measure = () => setIsMobile(window.innerWidth < 768);
+    measure();
+    window.addEventListener('resize', measure);
+    return () => window.removeEventListener('resize', measure);
+  }, []);
 
-  // Map the vertical scroll (0 to 1) to horizontal translation
-  // We translate left by an amount that reveals all cards.
-  // 6 cards total (5 projects + 1 show more button).
-  const x = useTransform(scrollYProgress, [0, 1], ['0%', '-85%']);
+  useEffect(() => {
+    // Wait for the DOM to be fully ready before calculating width
+    const ctx = gsap.context(() => {
+      const getScrollAmount = () => {
+        if (!trackRef.current) return 0;
+        let trackWidth = trackRef.current.scrollWidth;
+        return -(trackWidth - window.innerWidth);
+      };
+
+      gsap.to(trackRef.current, {
+        x: getScrollAmount,
+        ease: "none",
+        scrollTrigger: {
+          trigger: containerRef.current,
+          start: "top top",
+          end: () => `+=${getScrollAmount() * -1}`,
+          pin: true,
+          scrub: 1, // Smooth scrubbing
+          invalidateOnRefresh: true, // Recalculate on resize
+        }
+      });
+    }, containerRef);
+    
+    return () => ctx.revert(); // Cleanup GSAP
+  }, [isMobile]); // Re-run effect when mobile state changes the items array length
 
   return (
     <section id="projects" className="bg-[#0C0C0C] relative z-20">
-      {/* Tall container to enable vertical scrolling for the horizontal effect */}
-      <div ref={containerRef} className="h-[400vh]">
+      <div ref={containerRef} className="h-screen w-full overflow-hidden flex flex-col justify-center rounded-t-[40px] sm:rounded-t-[50px] md:rounded-t-[60px] bg-[#0C0C0C]">
         
-        {/* Sticky viewport-sized container */}
-        <div className="sticky top-0 h-screen w-full overflow-hidden flex flex-col justify-center
-          rounded-t-[40px] sm:rounded-t-[50px] md:rounded-t-[60px] bg-[#0C0C0C]"
-        >
-          
-          {/* Absolute positioned header so it stays put while cards slide under/past it */}
-          <div className="absolute top-16 sm:top-24 left-0 w-full px-5 sm:px-10 z-10 pointer-events-none">
-            <FadeIn delay={0} y={40}>
-              <h2
-                className="hero-heading font-black uppercase leading-none tracking-tight"
-                style={{ fontSize: 'clamp(2rem, 5vw, 60px)' }}
-              >
-                Projects
-              </h2>
-            </FadeIn>
-          </div>
-
-          {/* The moving horizontal track */}
-          <motion.div style={{ x }} className="flex h-full items-center pt-20 sm:pt-32 px-5 sm:px-10">
-            {/* Project Cards */}
-            {projects.map((project) => (
-              <HorizontalProjectCard key={project.number} project={project} />
-            ))}
-
-            {/* Final "Show More" Card */}
-            <div className="w-[85vw] sm:w-[60vw] md:w-[45vw] lg:w-[35vw] flex-shrink-0 h-full flex flex-col items-center justify-center px-4 sm:px-8">
-              <div className="flex flex-col items-center justify-center gap-8 border-2 border-[#D7E2EA]/10 rounded-3xl w-full h-[60vh] sm:h-[50vh] bg-[#D7E2EA]/5 hover:bg-[#D7E2EA]/10 transition-colors duration-300">
-                <h3 className="text-[#D7E2EA] font-medium text-2xl sm:text-3xl uppercase tracking-widest text-center">
-                  More Projects
-                </h3>
-                <a
-                  href="#"
-                  className="rounded-full bg-[#D7E2EA] text-[#0C0C0C]
-                    font-bold uppercase tracking-widest
-                    px-8 py-4 text-sm sm:text-base
-                    cursor-pointer transition-transform duration-200 hover:scale-105 shadow-xl"
-                >
-                  Show More
-                </a>
-              </div>
-            </div>
-          </motion.div>
-          
+        {/* Absolute positioned header so it stays put while cards slide under/past it */}
+        <div className="absolute top-24 sm:top-32 left-0 w-full px-5 sm:px-10 z-10 pointer-events-none">
+          <FadeIn delay={0} y={40}>
+            <h2
+              className="hero-heading font-black uppercase leading-none tracking-tight"
+              style={{ fontSize: 'clamp(2rem, 5vw, 60px)' }}
+            >
+              Projects
+            </h2>
+          </FadeIn>
         </div>
+
+        {/* The moving horizontal track */}
+        <div ref={trackRef} className="flex h-full items-center pt-20 sm:pt-32 px-5 sm:px-10 w-max">
+          {/* Project Cards */}
+          {(isMobile ? projects.slice(0, 2) : projects.slice(0, 5)).map((project) => (
+            <HorizontalProjectCard key={project.number} project={project} />
+          ))}
+
+          {/* Final "Show More" Card */}
+          <div className="w-[85vw] sm:w-[60vw] md:w-[45vw] lg:w-[35vw] flex-shrink-0 h-full flex flex-col items-center justify-center px-4 sm:px-8">
+            <div className="flex flex-col items-center justify-center gap-8 border-2 border-[#D7E2EA]/10 rounded-3xl w-full h-[60vh] sm:h-[50vh] bg-[#D7E2EA]/5 hover:bg-[#D7E2EA]/10 transition-colors duration-300">
+              <h3 className="text-[#D7E2EA] font-medium text-2xl sm:text-3xl uppercase tracking-widest text-center">
+                More Projects
+              </h3>
+              <a
+                href="#all-projects"
+                className="rounded-full bg-[#D7E2EA] text-[#0C0C0C]
+                  font-bold uppercase tracking-widest
+                  px-8 py-4 text-sm sm:text-base
+                  cursor-pointer transition-transform duration-200 hover:scale-105 shadow-xl"
+              >
+                Show More
+              </a>
+            </div>
+          </div>
+        </div>
+        
       </div>
     </section>
   );
