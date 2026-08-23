@@ -2,64 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import FadeIn from '../components/FadeIn';
 
-const certifications = [
-  {
-    title: 'Full-Stack Web Development',
-    issuer: 'Coursera / Meta',
-    date: '2023',
-    description: 'Comprehensive certification covering front-end and back-end development, responsive design, and database management.',
-    image: 'https://images.unsplash.com/photo-1523240795612-9a054b0db644?q=80&w=800&auto=format&fit=crop'
-  },
-  {
-    title: 'Advanced React Patterns',
-    issuer: 'Frontend Masters',
-    date: '2023',
-    description: 'Deep dive into advanced React concepts, performance optimization, and custom hooks architecture.',
-    image: 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=800&auto=format&fit=crop'
-  },
-  {
-    title: 'Cloud Computing Fundamentals',
-    issuer: 'AWS Training',
-    date: '2022',
-    description: 'Foundational knowledge of cloud concepts, core services, security, architecture, pricing, and support.',
-    image: 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?q=80&w=800&auto=format&fit=crop'
-  },
-  {
-    title: 'UI/UX Design Masterclass',
-    issuer: 'Design+Code',
-    date: '2024',
-    description: 'Advanced techniques in user interface design, user experience research, and prototyping with Figma.',
-    image: 'https://images.unsplash.com/photo-1561070791-2526d30994b5?q=80&w=800&auto=format&fit=crop'
-  },
-  {
-    title: 'Node.js Microservices',
-    issuer: 'Udemy',
-    date: '2024',
-    description: 'Building scalable microservices architecture using Node.js, Express, Docker, and Kubernetes.',
-    image: 'https://images.unsplash.com/photo-1550439062-609e1531270e?q=80&w=800&auto=format&fit=crop'
-  },
-  {
-    title: 'TypeScript for Professionals',
-    issuer: 'Codecademy',
-    date: '2023',
-    description: 'Mastering strong typing in JavaScript applications to build robust, error-free production codebases.',
-    image: 'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?q=80&w=800&auto=format&fit=crop'
-  },
-  {
-    title: 'Modern CSS Frameworks',
-    issuer: 'Pluralsight',
-    date: '2022',
-    description: 'Deep understanding of utility-first CSS, Tailwind architecture, and modern CSS-in-JS solutions.',
-    image: 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?q=80&w=800&auto=format&fit=crop'
-  },
-  {
-    title: 'Database Architecture',
-    issuer: 'MongoDB University',
-    date: '2021',
-    description: 'Designing scalable NoSQL schemas, performance tuning, and advanced aggregation pipelines.',
-    image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=800&auto=format&fit=crop'
-  }
-];
+import { certifications } from '../data/portfolioData';
 
 const CertificationsSection = () => {
   const [currentIndex, setCurrentIndex] = useState(0);

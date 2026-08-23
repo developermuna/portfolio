@@ -2,45 +2,7 @@ import { useRef } from 'react';
 import { motion, useScroll, useTransform, useMotionValue, useSpring } from 'framer-motion';
 import FadeIn from '../components/FadeIn';
 
-const projects = [
-  {
-    number: '01',
-    name: 'Bakery Website',
-    description:
-      'A delightful bakery showcase with an elegant product catalog, online ordering system, and warm brand identity that brings the in-store experience online.',
-    url: 'https://bakery.munakousalya.online',
-    image: 'https://images.unsplash.com/photo-1509440159596-0249088772ff?q=80&w=1000&auto=format&fit=crop',
-  },
-  {
-    number: '02',
-    name: 'Muna Kousalya',
-    description:
-      'A polished personal portfolio and business website featuring project showcases, service offerings, and a refined visual identity built to impress.',
-    url: 'https://munakousalya.online',
-    image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=1000&auto=format&fit=crop',
-  },
-  {
-    number: '03',
-    name: 'NovaTech Solutions',
-    description:
-      'A sleek SaaS landing page for a tech startup featuring animated hero sections, interactive pricing tables, and conversion-optimized user flows.',
-    image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=1000&auto=format&fit=crop',
-  },
-  {
-    number: '04',
-    name: 'GreenLeaf Interiors',
-    description:
-      'An immersive interior design portfolio with 3D room visualizations, before-and-after galleries, and a consultation booking system.',
-    image: 'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?q=80&w=1000&auto=format&fit=crop',
-  },
-  {
-    number: '05',
-    name: 'CloudSync Dashboard',
-    description:
-      'A data-driven web application dashboard with real-time analytics charts, team collaboration tools, and a clean, intuitive admin interface.',
-    image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=1000&auto=format&fit=crop',
-  }
-];
+import { projects } from '../data/portfolioData';
 
 const HorizontalProjectCard = ({ project }: { project: typeof projects[0] }) => {
   const ref = useRef<HTMLDivElement>(null);

@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import Navbar from './components/Navbar';
 import HeroSection from './sections/HeroSection';
 import MarqueeSection from './sections/MarqueeSection';
@@ -13,11 +14,18 @@ import LenisProvider from './components/LenisProvider';
 import CustomCursor from './components/CustomCursor';
 import FluidBackground from './components/FluidBackground';
 import ContactMeButton from './components/ContactMeButton';
+import SplashScreen from './components/SplashScreen';
 
 const App = () => {
+  const [splashComplete, setSplashComplete] = useState(false);
+
   return (
     <LenisProvider>
       <div className="bg-[#0C0C0C] font-kanit min-h-screen relative" style={{ overflowX: 'clip' }}>
+        
+        {!splashComplete && (
+          <SplashScreen onComplete={() => setSplashComplete(true)} />
+        )}
         
         {/* SVG filter for the fluid text hover effect */}
         <svg className="pointer-events-none absolute w-0 h-0">

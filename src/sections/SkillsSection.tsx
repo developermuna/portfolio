@@ -1,19 +1,6 @@
 import FadeIn from '../components/FadeIn';
 
-const skills = [
-  'HTML5',
-  'CSS3',
-  'JavaScript (ES6+)',
-  'React.js',
-  'Node.js',
-  'Express.js',
-  'MongoDB',
-  'Supabase',
-  'Tailwind CSS',
-  'TypeScript',
-  'Framer Motion',
-  'Git / GitHub',
-];
+import { skills } from '../data/portfolioData';
 
 const SkillsSection = () => {
   return (

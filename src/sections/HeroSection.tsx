@@ -24,6 +24,9 @@ const HeroSection = () => {
       img.onload = () => {
         loadedCount++;
         setImagesLoaded(loadedCount);
+        window.dispatchEvent(new CustomEvent('hero-image-loaded', { 
+          detail: { loaded: loadedCount, total: TOTAL_FRAMES } 
+        }));
       };
       
       loadedImages.push(img);
@@ -60,10 +63,16 @@ const HeroSection = () => {
             const context = canvas.getContext('2d', { willReadFrequently: true });
             
             if (context) {
-              // OPTIMIZATION 1: Set canvas internal resolution to match the image's native resolution.
-              if (canvas.width !== img.naturalWidth) {
-                canvas.width = img.naturalWidth;
-                canvas.height = img.naturalHeight;
+              // OPTIMIZATION 1: Set canvas internal resolution.
+              // Downscale on mobile for massive performance boost (4x fewer pixels to process)
+              const isMobile = window.innerWidth < 768;
+              const scale = isMobile ? 0.5 : 1;
+              const targetWidth = Math.round(img.naturalWidth * scale);
+              const targetHeight = Math.round(img.naturalHeight * scale);
+
+              if (canvas.width !== targetWidth) {
+                canvas.width = targetWidth;
+                canvas.height = targetHeight;
               }
 
               context.clearRect(0, 0, canvas.width, canvas.height);

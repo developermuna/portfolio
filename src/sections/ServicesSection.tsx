@@ -2,53 +2,7 @@ import { useRef } from 'react';
 import { motion, useScroll, useTransform, useSpring, type MotionValue } from 'framer-motion';
 import FadeIn from '../components/FadeIn';
 
-interface ServiceData {
-  number: string;
-  name: string;
-  description: string;
-  col1Image1: string;
-  col1Image2: string;
-  col2Image: string;
-}
-
-const services: ServiceData[] = [
-  {
-    number: '01',
-    name: 'Website Design',
-    description:
-      'Crafting beautiful, modern websites that captivate visitors and drive conversions with clean layouts, fluid typography, and seamless user experience.',
-    col1Image1: 'https://motionsites.ai/assets/hero-codenest-preview-Cgppc2qV.gif',
-    col1Image2: 'https://motionsites.ai/assets/hero-designpro-preview-D8c5_een.gif',
-    col2Image: 'https://motionsites.ai/assets/hero-xportfolio-preview-D4A8maiC.gif',
-  },
-  {
-    number: '02',
-    name: 'Web App Design',
-    description:
-      'Designing powerful, intuitive web applications with complex dashboards, data-driven interfaces, and scalable design systems built for real-world use.',
-    col1Image1: 'https://motionsites.ai/assets/hero-stellar-ai-v2-preview-DjvxjG3C.gif',
-    col1Image2: 'https://motionsites.ai/assets/hero-transform-data-preview-Cx5OU29N.gif',
-    col2Image: 'https://motionsites.ai/assets/hero-nexora-preview-cx5HmUgo.gif',
-  },
-  {
-    number: '03',
-    name: 'Mobile App Design',
-    description:
-      'Creating engaging mobile experiences with pixel-perfect interfaces, smooth micro-interactions, and native-feel designs for iOS and Android platforms.',
-    col1Image1: 'https://motionsites.ai/assets/hero-space-voyage-preview-eECLH3Yc.gif',
-    col1Image2: 'https://motionsites.ai/assets/hero-vex-ventures-preview-BczMFIiw.gif',
-    col2Image: 'https://motionsites.ai/assets/hero-orbit-web3-preview-BXt4OttD.gif',
-  },
-  {
-    number: '04',
-    name: 'Interior & Construction',
-    description:
-      'Bringing architectural visions to life with immersive 3D visualizations, realistic interior renders, and construction-ready design presentations.',
-    col1Image1: 'https://motionsites.ai/assets/hero-terra-preview-BFjrCr7T.gif',
-    col1Image2: 'https://motionsites.ai/assets/hero-aethera-preview-DknSlcTa.gif',
-    col2Image: 'https://motionsites.ai/assets/hero-luminex-preview-CxOP7ce6.gif',
-  },
-];
+import { type ServiceData, services } from '../data/portfolioData';
 
 const STACK_OFFSET = 18;
 
