@@ -54,7 +54,6 @@ const AboutSection = () => {
           </FadeIn>
 
           <FadeIn delay={0.4} y={20} className="flex flex-wrap items-center gap-6 mt-4 sm:mt-6">
-            <ContactButton />
             <div className="flex items-center gap-2 text-[#D7E2EA]/50 font-medium text-sm tracking-wide uppercase">
               <MapPin size={16} />
               <span>Odisha, India</span>

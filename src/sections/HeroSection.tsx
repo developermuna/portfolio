@@ -1,7 +1,6 @@
 import { useRef, useEffect, useState } from 'react';
 import { useScroll, useTransform, motion } from 'framer-motion';
 import FadeIn from '../components/FadeIn';
-import ContactButton from '../components/ContactButton';
 
 const TOTAL_FRAMES = 92;
 
@@ -162,7 +161,7 @@ const HeroSection = () => {
 
         {/* Main hero area (Bottom bar) */}
         <div className="flex-1 relative z-20 flex flex-col justify-end px-6 md:px-10 pb-7 sm:pb-8 md:pb-10 pointer-events-auto">
-          <div className="flex justify-between items-end w-full">
+          <div className="flex justify-between items-end w-full relative">
             <FadeIn delay={0.35} y={20}>
               <p
                 className="text-[#D7E2EA] font-light uppercase tracking-wide leading-snug
@@ -173,8 +172,10 @@ const HeroSection = () => {
               </p>
             </FadeIn>
 
-            <FadeIn delay={0.5} y={20}>
-              <ContactButton />
+            {/* Center Floating Buttons */}
+            <FadeIn delay={0.5} y={20} className="absolute left-1/2 -translate-x-1/2 bottom-0 flex items-center gap-3 sm:gap-4 z-30">
+              <a href="#projects" className="px-5 sm:px-6 py-2.5 sm:py-3 rounded-full bg-[#D7E2EA] text-[#0C0C0C] font-semibold tracking-wide uppercase text-xs sm:text-sm hover:scale-105 transition-transform duration-300 whitespace-nowrap shadow-[0_0_15px_rgba(215,226,234,0.3)]">View Projects</a>
+              <a href="#services" className="px-5 sm:px-6 py-2.5 sm:py-3 rounded-full border border-[#D7E2EA]/30 bg-[#0C0C0C]/50 backdrop-blur-md text-[#D7E2EA] font-semibold tracking-wide uppercase text-xs sm:text-sm hover:bg-[#D7E2EA]/10 hover:scale-105 transition-all duration-300 whitespace-nowrap">Services</a>
             </FadeIn>
           </div>
         </div>
