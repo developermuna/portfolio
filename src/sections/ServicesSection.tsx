@@ -63,19 +63,21 @@ const ServiceCard = ({
   totalCards: number;
   progress: MotionValue<number>;
 }) => {
-  const segmentSize = 1 / totalCards;
+  const remainingCards = totalCards - 1;
+  const segmentSize = remainingCards > 0 ? 1 / remainingCards : 1;
 
-  // When this card slides in
-  const slideStart = index * segmentSize;
-  const slideEnd = slideStart + segmentSize * 0.55;
+  // When subsequent cards slide in (card 0 is already visible initially)
+  const slideStart = Math.max(0, (index - 1) * segmentSize);
+  const slideEnd = Math.min(1, slideStart + segmentSize * 0.7);
 
-  // Y: slide from off-screen (below) to stacked position
-  const y = useTransform(progress, [slideStart, slideEnd], [1200, 0]);
+  // Y: card 0 starts at 0, while cards 1, 2, 3 slide in from 1200px below
+  const ySlide = useTransform(progress, [slideStart, slideEnd], [1200, 0]);
+  const y = index === 0 ? 0 : ySlide;
 
   // Scale: shrink slightly when subsequent cards stack on top
   const targetScale = 1 - (totalCards - 1 - index) * 0.04;
-  const scaleStart = (index + 1) * segmentSize;
-  const scaleEnd = Math.min(scaleStart + segmentSize * 0.4, 1);
+  const scaleStart = index === 0 ? 0 : Math.max(0, (index - 1) * segmentSize);
+  const scaleEnd = Math.min(scaleStart + segmentSize * 0.5, 1);
   const scale = useTransform(
     progress,
     [0, scaleStart, scaleEnd, 1],
@@ -165,6 +167,7 @@ const ServicesSection = () => {
 
   return (
     <section
+      id="services"
       ref={sectionRef}
       className="bg-white rounded-t-[40px] sm:rounded-t-[50px] md:rounded-t-[60px] relative z-40"
       style={{ height: `${(services.length + 1) * 100}vh` }}

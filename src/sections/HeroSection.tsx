@@ -114,29 +114,103 @@ const HeroSection = () => {
       {/* Sticky Viewport Container */}
       <div className="sticky top-0 h-screen flex flex-col pt-20 sm:pt-24 overflow-hidden">
         
+        {/* SVG Filters for Letter Attaching & Detaching Effects */}
+        <svg className="pointer-events-none absolute w-0 h-0">
+          {/* Subtle fluid effect for the main heading */}
+          <filter id="heading-fluid">
+            <feTurbulence type="fractalNoise" baseFrequency="0.015" numOctaves="2" result="noise">
+              <animate attributeName="baseFrequency" values="0.015; 0.025; 0.015" dur="6s" repeatCount="indefinite" />
+            </feTurbulence>
+            <feDisplacementMap in="SourceGraphic" in2="noise" scale="4" xChannelSelector="R" yChannelSelector="B" />
+          </filter>
+
+          {/* Left Exit: Detaching & Peeling apart effect */}
+          <filter id="letter-detach">
+            <feTurbulence type="fractalNoise" baseFrequency="0.04 0.02" numOctaves="3" result="noise">
+              <animate attributeName="baseFrequency" values="0.03 0.02; 0.06 0.03; 0.03 0.02" dur="4s" repeatCount="indefinite" />
+            </feTurbulence>
+            <feDisplacementMap in="SourceGraphic" in2="noise" scale="40" xChannelSelector="R" yChannelSelector="B" result="detached" />
+            <feGaussianBlur in="detached" stdDeviation="0.8" />
+          </filter>
+
+          {/* Full fluid effect for the moving text */}
+          <filter id="moving-text-fluid">
+            <feTurbulence type="fractalNoise" baseFrequency="0.01 0.02" numOctaves="2" result="noise">
+              <animate attributeName="baseFrequency" values="0.01 0.02; 0.015 0.03; 0.01 0.02" dur="4s" repeatCount="indefinite" />
+            </feTurbulence>
+            <feDisplacementMap in="SourceGraphic" in2="noise" scale="8" xChannelSelector="R" yChannelSelector="B" />
+          </filter>
+
+          {/* Right Entry: Magnetic Attaching & Converging effect */}
+          <filter id="letter-attach">
+            <feTurbulence type="fractalNoise" baseFrequency="0.02 0.05" numOctaves="2" result="noise">
+              <animate attributeName="baseFrequency" values="0.02 0.05; 0.04 0.08; 0.02 0.05" dur="4s" repeatCount="indefinite" />
+            </feTurbulence>
+            <feDisplacementMap in="SourceGraphic" in2="noise" scale="30" xChannelSelector="G" yChannelSelector="R" result="attached" />
+          </filter>
+        </svg>
+
         {/* Hero Heading (Moved to back, z-0) */}
-        <div className="absolute top-20 sm:top-24 left-0 w-full px-6 md:px-10 z-0 flex flex-col items-center justify-start h-full pt-10">
-          <FadeIn delay={0.15} y={40} className="overflow-hidden w-full text-center">
-            <h1
+        <div className="absolute top-10 sm:top-12 left-0 w-full px-6 md:px-10 z-0 flex flex-col items-center justify-start h-full pt-4 sm:pt-6">
+          <FadeIn delay={0.15} y={40} className="overflow-visible w-full text-center">
+            <motion.h1
+              animate={{ y: [0, -4, 0] }}
+              transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
               className="hero-heading font-black uppercase tracking-tight leading-none
                 whitespace-nowrap w-full
                 text-[14vw] sm:text-[15vw] md:text-[16vw] lg:text-[17.5vw]
-                text-[#D7E2EA]"
+                text-[#D7E2EA] drop-shadow-[0_15px_30px_rgba(0,0,0,0.8)]"
             >
               Hi, i&apos;m muna
-            </h1>
+            </motion.h1>
           </FadeIn>
           
-          <FadeIn delay={0.25} y={20} className="w-full overflow-hidden mt-2 sm:mt-4 opacity-70">
+          <FadeIn delay={0.25} y={20} className="w-full relative overflow-hidden mt-1 sm:mt-2">
+            {/* Left Exit: Detaching Letters Dissolve Zone (Narrowed to a small part) */}
+            <div 
+              className="absolute left-0 top-0 bottom-0 w-12 sm:w-24 md:w-32 z-20 pointer-events-none"
+              style={{ 
+                backdropFilter: 'url(#letter-detach)',
+                WebkitBackdropFilter: 'url(#letter-detach)',
+                maskImage: 'linear-gradient(to right, black 0%, black 20%, transparent 100%)',
+                WebkitMaskImage: 'linear-gradient(to right, black 0%, black 20%, transparent 100%)'
+              }}
+            />
+
+            {/* Right Entry: Attaching Letters Magnetic Zone */}
+            <div 
+              className="absolute right-0 top-0 bottom-0 w-32 sm:w-56 md:w-72 z-20 pointer-events-none"
+              style={{ 
+                backdropFilter: 'url(#letter-attach)',
+                WebkitBackdropFilter: 'url(#letter-attach)',
+                maskImage: 'linear-gradient(to left, black 0%, black 20%, transparent 100%)',
+                WebkitMaskImage: 'linear-gradient(to left, black 0%, black 20%, transparent 100%)'
+              }}
+            />
+
+            {/* Ultra-smooth Feathered Floating Marquee Container */}
             <motion.div
-              animate={{ x: ["0%", "-50%"] }}
-              transition={{ repeat: Infinity, ease: "linear", duration: 15 }}
-              className="flex whitespace-nowrap text-[#D7E2EA] font-black uppercase tracking-tight leading-none text-[6vw] sm:text-[7vw] md:text-[8vw] lg:text-[9vw]"
+              animate={{ y: [-26, 26, -26] }}
+              transition={{ duration: 3.8, repeat: Infinity, ease: "easeInOut" }}
+              style={{
+                maskImage: 'linear-gradient(to right, rgba(0,0,0,0) 0%, rgba(0,0,0,0.2) 6%, rgba(0,0,0,0.7) 16%, rgba(0,0,0,1) 26%, rgba(0,0,0,1) 74%, rgba(0,0,0,0.7) 84%, rgba(0,0,0,0.2) 94%, rgba(0,0,0,0) 100%)',
+                WebkitMaskImage: 'linear-gradient(to right, rgba(0,0,0,0) 0%, rgba(0,0,0,0.2) 6%, rgba(0,0,0,0.7) 16%, rgba(0,0,0,1) 26%, rgba(0,0,0,1) 74%, rgba(0,0,0,0.7) 84%, rgba(0,0,0,0.2) 94%, rgba(0,0,0,0) 100%)',
+                filter: 'url(#moving-text-fluid)'
+              }}
+              className="py-8"
             >
-              <span className="pr-8">a fullstack developer, construction & interior , app developer, ai assist software developer • </span>
-              <span className="pr-8">a fullstack developer, construction & interior , app developer, ai assist software developer • </span>
-              <span className="pr-8">a fullstack developer, construction & interior , app developer, ai assist software developer • </span>
-              <span className="pr-8">a fullstack developer, construction & interior , app developer, ai assist software developer • </span>
+              <motion.div
+                animate={{ x: ["0%", "-50%"] }}
+                transition={{ repeat: Infinity, ease: "linear", duration: 55 }}
+                className="flex w-max whitespace-nowrap font-black uppercase tracking-tight leading-none text-[5.5vw] sm:text-[6.5vw] md:text-[7.5vw] lg:text-[8vw] text-transparent [-webkit-text-stroke:1px_rgba(215,226,234,0.85)] sm:[-webkit-text-stroke:1.5px_rgba(215,226,234,0.85)] select-none"
+              >
+                <span className="shrink-0 pr-8">
+                  ai assist developer &amp; designer • full stack developer • app developer • construction &amp; interior designer • 
+                </span>
+                <span className="shrink-0 pr-8">
+                  ai assist developer &amp; designer • full stack developer • app developer • construction &amp; interior designer • 
+                </span>
+              </motion.div>
             </motion.div>
           </FadeIn>
         </div>
@@ -161,8 +235,8 @@ const HeroSection = () => {
 
         {/* Main hero area (Bottom bar) */}
         <div className="flex-1 relative z-20 flex flex-col justify-end px-6 md:px-10 pb-7 sm:pb-8 md:pb-10 pointer-events-auto">
-          <div className="flex justify-between items-end w-full relative">
-            <FadeIn delay={0.35} y={20}>
+          <div className="flex flex-col sm:flex-row justify-between items-center sm:items-end w-full relative gap-4">
+            <FadeIn delay={0.35} y={20} className="self-start sm:self-auto">
               <p
                 className="text-[#D7E2EA] font-light uppercase tracking-wide leading-snug
                   max-w-[160px] sm:max-w-[220px] md:max-w-[260px]"
@@ -172,10 +246,26 @@ const HeroSection = () => {
               </p>
             </FadeIn>
 
-            {/* Center Floating Buttons */}
-            <FadeIn delay={0.5} y={20} className="absolute left-1/2 -translate-x-1/2 bottom-0 flex items-center gap-3 sm:gap-4 z-30">
-              <a href="#projects" className="px-5 sm:px-6 py-2.5 sm:py-3 rounded-full bg-[#D7E2EA] text-[#0C0C0C] font-semibold tracking-wide uppercase text-xs sm:text-sm hover:scale-105 transition-transform duration-300 whitespace-nowrap shadow-[0_0_15px_rgba(215,226,234,0.3)]">View Projects</a>
-              <a href="#services" className="px-5 sm:px-6 py-2.5 sm:py-3 rounded-full border border-[#D7E2EA]/30 bg-[#0C0C0C]/50 backdrop-blur-md text-[#D7E2EA] font-semibold tracking-wide uppercase text-xs sm:text-sm hover:bg-[#D7E2EA]/10 hover:scale-105 transition-all duration-300 whitespace-nowrap">Services</a>
+            {/* Center Floating Action Pill containing Services & View Projects */}
+            <FadeIn delay={0.5} y={20} className="sm:absolute sm:left-[38%] md:sm:left-[40%] sm:-translate-x-1/2 sm:-bottom-3 md:sm:-bottom-4 z-30 pointer-events-auto">
+              <motion.div 
+                animate={{ y: [0, -6, 0] }}
+                transition={{ duration: 3.5, repeat: Infinity, ease: 'easeInOut' }}
+                className="flex items-center p-1 sm:p-1.5 rounded-full bg-[#0C0C0C]/80 backdrop-blur-xl border border-white shadow-[0_10px_30px_rgba(0,0,0,0.6)] group"
+              >
+                <a
+                  href="#services"
+                  className="px-5 sm:px-6 py-2 sm:py-2.5 rounded-full bg-white text-[#0C0C0C] font-semibold tracking-wide uppercase text-xs sm:text-sm hover:scale-105 transition-all duration-300 whitespace-nowrap shadow-md"
+                >
+                  Services
+                </a>
+                <a
+                  href="#projects"
+                  className="px-5 sm:px-6 py-2 sm:py-2.5 rounded-full text-white font-semibold tracking-wide uppercase text-xs sm:text-sm hover:text-white hover:bg-white/10 transition-all duration-300 whitespace-nowrap ml-1"
+                >
+                  View Projects
+                </a>
+              </motion.div>
             </FadeIn>
           </div>
         </div>

@@ -1,6 +1,5 @@
 import { motion } from 'framer-motion';
 import FadeIn from '../components/FadeIn';
-import ContactButton from '../components/ContactButton';
 import InfinityBlackHole from '../components/InfinityBlackHole';
 import { MapPin, Code2, Layers, Cpu } from 'lucide-react';
 

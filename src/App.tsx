@@ -1,5 +1,3 @@
-import { useRef, useEffect, useState } from 'react';
-import { useScroll, useTransform, motion } from 'framer-motion';
 import Navbar from './components/Navbar';
 import HeroSection from './sections/HeroSection';
 import MarqueeSection from './sections/MarqueeSection';
@@ -14,6 +12,8 @@ import ContactSection from './sections/ContactSection';
 import LenisProvider from './components/LenisProvider';
 import CustomCursor from './components/CustomCursor';
 import FluidBackground from './components/FluidBackground';
+import ContactMeButton from './components/ContactMeButton';
+
 const App = () => {
   return (
     <LenisProvider>
@@ -33,6 +33,8 @@ const App = () => {
         <CustomCursor />
         
         <Navbar />
+        <ContactMeButton />
+        
         <HeroSection />
         <MarqueeSection />
         <AboutSection />

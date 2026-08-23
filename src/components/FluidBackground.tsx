@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from 'react';
+// @ts-ignore
 import WebGLFluid from 'webgl-fluid';
 
 const FluidBackground: React.FC = () => {
@@ -33,6 +34,13 @@ const FluidBackground: React.FC = () => {
       const handlePointerMove = (e: PointerEvent | MouseEvent) => {
         if (!canvasRef.current) return;
         
+        // Check if cursor is over a button, link, or their container padding
+        if (e.target instanceof Element) {
+          if (e.target.closest('a, button, [role="button"], nav, .group')) {
+            return; // Skip drawing fluid
+          }
+        }
+        
         // Dispatch standard mouse event
         const mouseEvent = new MouseEvent('mousemove', {
           clientX: e.clientX,
@@ -44,11 +52,25 @@ const FluidBackground: React.FC = () => {
 
       const handleTouchMove = (e: TouchEvent) => {
         if (!canvasRef.current || e.touches.length === 0) return;
-        const touchEvent = new TouchEvent('touchmove', {
-          touches: e.touches,
-          bubbles: true
-        });
-        canvasRef.current.dispatchEvent(touchEvent);
+
+        // Check if touch is over a button, link, or their container padding
+        if (e.target instanceof Element) {
+          if (e.target.closest('a, button, [role="button"], nav, .group')) {
+            return; // Skip drawing fluid
+          }
+        }
+
+        try {
+          const touch = e.touches[0];
+          const mouseEvent = new MouseEvent('mousemove', {
+            clientX: touch.clientX,
+            clientY: touch.clientY,
+            bubbles: true
+          });
+          canvasRef.current.dispatchEvent(mouseEvent);
+        } catch {
+          // Ignore fallback touch
+        }
       };
 
       window.addEventListener('pointermove', handlePointerMove);

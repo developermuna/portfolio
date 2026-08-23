@@ -106,7 +106,7 @@ const CertificationsSection = () => {
     return () => clearInterval(timer);
   }, [nextSlide, isHovered]);
 
-  const handleDragEnd = (e: any, { offset, velocity }: any) => {
+  const handleDragEnd = (_e: any, { offset, velocity }: any) => {
     const swipe = offset.x;
     if (swipe < -50 || velocity.x < -500) {
       nextSlide();

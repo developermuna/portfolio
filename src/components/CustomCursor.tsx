@@ -16,7 +16,8 @@ export const CustomCursor = () => {
         target.tagName.toLowerCase() === 'button' ||
         target.tagName.toLowerCase() === 'a' ||
         target.closest('button') ||
-        target.closest('a')
+        target.closest('a') ||
+        target.closest('nav')
       ) {
         setIsHovering(true);
       } else {
@@ -39,7 +40,8 @@ export const CustomCursor = () => {
       animate={{
         x: mousePosition.x - 30,
         y: mousePosition.y - 30,
-        scale: isHovering ? 1.5 : 1,
+        scale: isHovering ? 0 : 1,
+        opacity: isHovering ? 0 : 1,
       }}
       transition={{
         type: 'spring',
