@@ -1,6 +1,6 @@
 import { useState, useEffect, lazy, Suspense } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { isAuthenticated } from './utils/dataStore';
+import { isAuthenticated, logout } from './utils/dataStore';
 import Navbar from './components/Navbar';
 import HeroSection from './sections/HeroSection';
 import MarqueeSection from './sections/MarqueeSection';
@@ -34,19 +34,15 @@ const App = () => {
 
   useEffect(() => {
     // Force sign out on page reload
-    import('./utils/dataStore').then(m => {
-      m.logout();
-      setIsAuth(false);
-    });
+    logout();
+    setIsAuth(false);
 
     const onHashChange = () => {
       const newHash = window.location.hash;
       setCurrentHash(newHash);
       if (!newHash.startsWith('#admin')) {
-        import('./utils/dataStore').then(m => {
-          m.logout();
-          setIsAuth(false);
-        });
+        logout();
+        setIsAuth(false);
       }
     };
     window.addEventListener('hashchange', onHashChange);
@@ -132,8 +128,9 @@ const App = () => {
             >
               <Suspense fallback={<div className="h-screen w-full bg-[#0C0C0C]" />}>
                 {isAuth ? <AdminPage onLogout={() => {
-                  import('./utils/dataStore').then(m => m.logout());
+                  logout();
                   setIsAuth(false);
+                  window.location.hash = '#home';
                 }} /> : <AdminLoginPage onLoginSuccess={() => setIsAuth(true)} />}
               </Suspense>
             </motion.div>

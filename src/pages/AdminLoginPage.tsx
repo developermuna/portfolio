@@ -10,13 +10,14 @@ interface AdminLoginPageProps {
 const AdminLoginPage = ({ onLoginSuccess }: AdminLoginPageProps) => {
   const [error, setError] = useState('');
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
     const id = formData.get('id') as string;
     const password = formData.get('password') as string;
 
-    if (login(id, password)) {
+    const success = await login(id, password);
+    if (success) {
       setError('');
       onLoginSuccess();
     } else {

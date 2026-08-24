@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import { 
-  addProject, addProduct, addCertification, setAdminCredentials, 
+  addProject, addProduct, addCertification, 
   getProjects, updateProject, deleteProject, type Project,
   getProducts, updateProduct, deleteProduct, type Product,
   getCertifications, updateCertification, deleteCertification, type Certification
 } from '../utils/dataStore';
-import { ArrowLeft, CheckCircle2, ShieldCheck, FolderPlus, PackagePlus, Settings, LogOut, AlertCircle } from 'lucide-react';
+import { ArrowLeft, CheckCircle2, ShieldCheck, FolderPlus, PackagePlus, LogOut, AlertCircle } from 'lucide-react';
 import FadeIn from '../components/FadeIn';
 
 interface AdminPageProps {
@@ -168,16 +168,7 @@ const AdminPage = ({ onLogout }: AdminPageProps) => {
     setCertMode('edit');
   };
 
-  const handleCredentialsSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const formData = new FormData(e.currentTarget);
-    const newId = formData.get('newId') as string;
-    const newPassword = formData.get('newPassword') as string;
-    
-    setAdminCredentials(newId, newPassword);
-    showSuccess('Credentials updated successfully!');
-    e.currentTarget.reset();
-  };
+
 
   const inputClass = "w-full bg-[#1A1A1A] border border-[#D7E2EA]/10 rounded-xl px-4 py-3 text-[#D7E2EA] placeholder-[#D7E2EA]/30 focus:outline-none focus:border-[#D7E2EA]/50 transition-colors";
   const labelClass = "block text-[#D7E2EA]/70 text-sm font-medium mb-2 uppercase tracking-wider";
@@ -253,13 +244,6 @@ const AdminPage = ({ onLogout }: AdminPageProps) => {
           >
             <PackagePlus size={18} />
             Products
-          </button>
-          <button 
-            onClick={() => setActiveTab('settings')}
-            className={`flex items-center gap-2 px-5 py-3 rounded-xl font-bold uppercase tracking-wider text-sm transition-all ${activeTab === 'settings' ? 'bg-[#D7E2EA] text-[#0C0C0C]' : 'bg-[#1A1A1A] text-[#D7E2EA]/60 hover:bg-[#D7E2EA]/10 hover:text-[#D7E2EA]'}`}
-          >
-            <Settings size={18} />
-            Settings
           </button>
         </div>
 
@@ -588,29 +572,7 @@ const AdminPage = ({ onLogout }: AdminPageProps) => {
               </div>
             )}
 
-            {/* SETTINGS FORM */}
-            {activeTab === 'settings' && (
-              <form onSubmit={handleCredentialsSubmit} className="flex flex-col gap-6">
-                <div>
-                  <label className={labelClass}>New Admin ID</label>
-                  <input name="newId" required type="text" placeholder="e.g. muna_admin" className={inputClass} />
-                </div>
-                <div>
-                  <label className={labelClass}>New Password</label>
-                  <input name="newPassword" required type="password" placeholder="Enter new password" className={inputClass} />
-                </div>
-                
-                <div className="p-4 bg-orange-500/10 border border-orange-500/20 rounded-xl mt-2">
-                  <p className="text-orange-400 text-sm font-medium">
-                    Note: Changing your credentials will require you to use the new ID and password the next time you log in. Since there is no password recovery feature, please remember them carefully!
-                  </p>
-                </div>
 
-                <button type="submit" className="mt-4 bg-[#D7E2EA] text-[#0C0C0C] font-bold uppercase tracking-widest py-4 rounded-xl hover:bg-white transition-colors">
-                  Update Credentials
-                </button>
-              </form>
-            )}
 
           </div>
         </FadeIn>
