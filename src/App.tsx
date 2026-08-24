@@ -1,4 +1,4 @@
-import { useState, useEffect, lazy, Suspense } from 'react';
+import { useState, useEffect, lazy, Suspense, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { isAuthenticated, logout } from './utils/dataStore';
 import Navbar from './components/Navbar';
@@ -31,6 +31,10 @@ const App = () => {
   const [splashComplete, setSplashComplete] = useState(false);
   const [currentHash, setCurrentHash] = useState(window.location.hash);
   const [isAuth, setIsAuth] = useState(() => isAuthenticated());
+
+  const handleSplashComplete = useCallback(() => {
+    setSplashComplete(true);
+  }, []);
 
   useEffect(() => {
     // Force sign out on page reload
@@ -90,7 +94,7 @@ const App = () => {
       <div className="bg-[#0C0C0C] font-kanit min-h-screen relative" style={{ overflowX: 'clip' }}>
         
         {!splashComplete && (
-          <SplashScreen onComplete={() => setSplashComplete(true)} />
+          <SplashScreen onComplete={handleSplashComplete} />
         )}
         
         {/* SVG filter for the fluid text hover effect */}

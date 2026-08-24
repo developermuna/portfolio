@@ -61,6 +61,7 @@ const SplashScreen = ({ onComplete }: SplashScreenProps) => {
     <AnimatePresence onExitComplete={onComplete}>
       {isVisible && (
         <motion.div
+          key="splash-container"
           className="fixed inset-0 z-[99999] h-[100dvh] w-screen bg-[#0C0C0C] flex flex-col items-center justify-center text-[#D7E2EA] overflow-hidden"
           initial={{ opacity: 1 }}
           exit={{ opacity: 0 }} // Instantly disappear underneath the GSAP cover
