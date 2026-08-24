@@ -1,6 +1,6 @@
 import { useRef, useEffect, useState } from 'react';
 import { useScroll, useTransform, motion } from 'framer-motion';
-import FadeIn from '../components/FadeIn';
+import FadeIn from '../../components/common/FadeIn';
 
 const TOTAL_FRAMES = 110;
 
@@ -83,19 +83,25 @@ const HeroSection = () => {
             const context = canvas.getContext('2d', { willReadFrequently: true });
             
             if (context) {
-              // Render at full native HD resolution, accounting for Retina/High-DPI displays
-              const dpr = window.devicePixelRatio || 1;
-              const targetWidth = Math.round(img.naturalWidth * dpr);
-              const targetHeight = Math.round(img.naturalHeight * dpr);
+              // Render at full native HD resolution on desktop, but optimize heavily for mobile to prevent lag
+              const isMobileWidth = window.innerWidth < 768;
+              
+              // On mobile, force DPR to 1 and scale down resolution (e.g., to ~720p) to keep scrolling silky smooth.
+              // On desktop, use native device pixel ratio for crispness.
+              const dpr = isMobileWidth ? 1 : (window.devicePixelRatio || 1);
+              const scale = isMobileWidth ? 0.5 : 1; 
+              
+              const targetWidth = Math.round(img.naturalWidth * dpr * scale);
+              const targetHeight = Math.round(img.naturalHeight * dpr * scale);
 
               if (canvas.width !== targetWidth) {
                 canvas.width = targetWidth;
                 canvas.height = targetHeight;
               }
               
-              // Maximize sharpness and clarity
+              // Maximize sharpness and clarity on desktop, prioritize speed on mobile
               context.imageSmoothingEnabled = true;
-              context.imageSmoothingQuality = 'high';
+              context.imageSmoothingQuality = isMobileWidth ? 'low' : 'high';
 
               context.clearRect(0, 0, canvas.width, canvas.height);
               context.drawImage(img, 0, 0, canvas.width, canvas.height);
@@ -156,7 +162,7 @@ const HeroSection = () => {
 
         {/* Hero Heading (Moved to back, z-0) */}
         <div 
-          className="absolute top-10 sm:top-12 left-0 w-full px-4 sm:px-6 md:px-10 z-0 flex flex-col items-center justify-start h-full pt-8 sm:pt-6"
+          className="absolute inset-0 sm:top-12 left-0 w-full px-1 sm:px-6 md:px-10 z-0 flex flex-col items-center justify-start h-full pt-32 sm:pt-6"
           style={{ isolation: 'isolate', transform: 'translateZ(0)', backfaceVisibility: 'hidden' }}
         >
           <FadeIn delay={0.15} y={40} className="overflow-visible w-full text-center">
@@ -173,7 +179,7 @@ const HeroSection = () => {
             </motion.h1>
           </FadeIn>
           
-          <FadeIn delay={0.25} y={20} className="w-full relative overflow-hidden mt-1 sm:mt-2">
+          <FadeIn delay={0.25} y={20} className="w-full absolute top-[35%] sm:relative sm:top-auto sm:bottom-auto overflow-visible sm:overflow-hidden sm:mt-2 sm:mb-0">
             {/* Left Exit: Detaching Letters Dissolve Zone (Narrowed to a small part) */}
             <div 
               className="absolute left-0 top-0 bottom-0 w-12 sm:w-24 md:w-32 z-20 pointer-events-none"
@@ -235,7 +241,7 @@ const HeroSection = () => {
         
         {/* Full-screen Canvas Animation (Brought forward, z-10) */}
         {/* Removed mix-blend-screen because we are now making the black pixels genuinely transparent via Luma Keying! */}
-        <div className="absolute inset-0 pt-20 sm:pt-24 z-10 flex justify-center items-center pointer-events-none">
+        <div className="absolute inset-0 sm:pt-24 z-10 flex justify-center items-center pointer-events-none">
           {/* Show loading state until enough images are loaded */}
           {imagesLoaded < 15 && (
             <div className="absolute inset-0 flex items-center justify-center text-[#D7E2EA]/50 font-medium tracking-widest text-sm uppercase z-10">
@@ -247,38 +253,38 @@ const HeroSection = () => {
             ref={canvasRef}
             width={1920}
             height={1080}
-            className={`w-full h-full object-cover object-center sm:object-[center_10%] scale-[0.85] sm:scale-100 grayscale transition-opacity duration-500 ${imagesLoaded >= 15 ? 'opacity-100' : 'opacity-0'}`}
+            className={`w-full h-full object-contain sm:object-cover object-center sm:object-[center_10%] scale-[1.8] sm:scale-100 grayscale transition-opacity duration-500 ${imagesLoaded >= 15 ? 'opacity-100' : 'opacity-0'}`}
           />
         </div>
 
         {/* Main hero area (Bottom bar) */}
-        <div className="flex-1 relative z-20 flex flex-col justify-end px-4 sm:px-6 md:px-10 pb-24 sm:pb-8 md:pb-10 pointer-events-auto">
-          <div className="flex flex-col sm:flex-row justify-between items-center sm:items-end w-full relative gap-6 sm:gap-4">
+        <div className="flex-1 relative z-20 flex flex-col justify-end px-4 sm:px-6 md:px-10 pb-10 sm:pb-8 md:pb-10 pointer-events-auto">
+          <div className="flex flex-col sm:flex-row justify-between items-center sm:items-end w-full relative gap-4 sm:gap-4">
             <FadeIn delay={0.35} y={20} className="w-full sm:w-auto">
               <p
                 className="text-[#D7E2EA] font-bold sm:font-light uppercase tracking-wide leading-snug
-                  max-w-[280px] sm:max-w-[220px] md:max-w-[260px] mx-auto sm:mx-0 text-center sm:text-left
-                  text-[0.9rem] sm:text-[clamp(0.75rem,1.4vw,1.5rem)]"
+                  max-w-[320px] sm:max-w-[260px] md:max-w-[300px] mx-auto sm:mx-0 text-center sm:text-left
+                  text-[1.05rem] sm:text-[clamp(0.95rem,1.6vw,1.75rem)]"
               >
                 a full-stack developer driven by crafting striking and unforgettable projects
               </p>
             </FadeIn>
 
             {/* Center Floating Action Pill containing Services & View Projects */}
-            <FadeIn delay={0.5} y={20} className="w-full sm:w-auto flex justify-center sm:absolute sm:left-[38%] md:sm:left-[40%] sm:-translate-x-1/2 sm:-bottom-3 md:sm:-bottom-4 z-30 pointer-events-auto mb-12 sm:mb-0">
+            <FadeIn delay={0.5} y={20} className="w-full sm:w-auto flex justify-center sm:absolute sm:left-[38%] md:sm:left-[40%] sm:-translate-x-1/2 sm:-bottom-3 md:sm:-bottom-4 z-30 pointer-events-auto mb-6 sm:mb-0">
               <motion.div 
                 animate={{ y: [0, -6, 0] }}
                 transition={{ duration: 3.5, repeat: Infinity, ease: 'easeInOut' }}
                 className="flex items-center p-1 sm:p-1.5 rounded-full bg-[#0C0C0C]/80 backdrop-blur-xl border border-white shadow-[0_10px_30px_rgba(0,0,0,0.6)] group"
               >
                 <a
-                  href="#services"
+                  href="/#services"
                   className="px-5 sm:px-6 py-2 sm:py-2.5 rounded-full bg-white text-[#0C0C0C] font-semibold tracking-wide uppercase text-xs sm:text-sm hover:scale-105 transition-all duration-300 whitespace-nowrap shadow-md"
                 >
                   Services
                 </a>
                 <a
-                  href="#projects"
+                  href="/#projects"
                   className="px-5 sm:px-6 py-2 sm:py-2.5 rounded-full text-white font-semibold tracking-wide uppercase text-xs sm:text-sm hover:text-white hover:bg-white/10 transition-all duration-300 whitespace-nowrap ml-1"
                 >
                   View Projects

@@ -1,7 +1,14 @@
 import { useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import gsap from 'gsap';
 
 export default function CurveTransition() {
+  const navigate = useNavigate();
+  const navigateRef = useRef(navigate);
+  
+  useEffect(() => {
+    navigateRef.current = navigate;
+  }, [navigate]);
   const containerRef = useRef<HTMLDivElement>(null);
   const path1Ref = useRef<SVGPathElement>(null);
   const path2Ref = useRef<SVGPathElement>(null);
@@ -93,31 +100,57 @@ export default function CurveTransition() {
       }, "-=0.1")
       .add(() => {
           if (!isSplashExit) {
-            window.location.hash = targetHash === '#home' ? '' : targetHash;
-            setTimeout(() => {
-              try {
-                const isDedicatedPage = ['#privacy', '#terms', '#refund', '#admin', '#all-projects', '#all-products'].some(route => targetHash.startsWith(route));
-                if (isDedicatedPage || targetHash === '#home') {
+            if (targetHash.startsWith('/')) {
+              // React router navigation
+              const [path, hashPart] = targetHash.split('#');
+              const finalPath = hashPart ? `${path}#${hashPart}` : path;
+              navigateRef.current(finalPath);
+              
+              setTimeout(() => {
+                if (!hashPart) {
                   window.scrollTo(0, 0);
                   if ((window as any).lenis) {
                     (window as any).lenis.scrollTo(0, { immediate: true });
                   }
-                  return;
-                }
-
-                const cleanHash = targetHash.split('?')[0];
-                const newEl = document.querySelector(cleanHash);
-                if (newEl) {
-                  if ((window as any).lenis) {
-                    (window as any).lenis.scrollTo(newEl, { immediate: true, offset: 0 });
-                  } else {
-                    newEl.scrollIntoView();
+                } else {
+                  const newEl = document.getElementById(hashPart);
+                  if (newEl) {
+                    if ((window as any).lenis) {
+                      (window as any).lenis.scrollTo(newEl, { immediate: true, offset: 0 });
+                    } else {
+                      newEl.scrollIntoView();
+                    }
                   }
                 }
-              } catch (err) {
-                console.error('CurveTransition navigation error:', err);
-              }
-            }, 30); // 30ms is just enough for React to process the hash change
+              }, 50);
+            } else {
+              // Legacy hash navigation
+              window.location.hash = targetHash === '#home' ? '' : targetHash;
+              setTimeout(() => {
+                try {
+                  const isDedicatedPage = ['#privacy', '#terms', '#refund', '#admin', '#all-projects', '#all-products'].some(route => targetHash.startsWith(route));
+                  if (isDedicatedPage || targetHash === '#home') {
+                    window.scrollTo(0, 0);
+                    if ((window as any).lenis) {
+                      (window as any).lenis.scrollTo(0, { immediate: true });
+                    }
+                    return;
+                  }
+
+                  const cleanHash = targetHash.split('?')[0];
+                  const newEl = document.querySelector(cleanHash);
+                  if (newEl) {
+                    if ((window as any).lenis) {
+                      (window as any).lenis.scrollTo(newEl, { immediate: true, offset: 0 });
+                    } else {
+                      newEl.scrollIntoView();
+                    }
+                  }
+                } catch (err) {
+                  console.error('CurveTransition navigation error:', err);
+                }
+              }, 30); // 30ms is just enough for React to process the hash change
+            }
           }
       }, "-=0.2") // Trigger scroll/hash slightly before fully covered
       .to(paths, {

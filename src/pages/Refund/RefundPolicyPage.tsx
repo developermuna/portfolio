@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowLeft, AlertCircle } from 'lucide-react';
-import FadeIn from '../components/FadeIn';
+import FadeIn from '../../components/common/FadeIn';
 
 const RefundPolicyPage = () => {
   useEffect(() => {

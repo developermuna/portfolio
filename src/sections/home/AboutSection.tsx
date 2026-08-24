@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
-import FadeIn from '../components/FadeIn';
-import InfinityBlackHole from '../components/InfinityBlackHole';
+import FadeIn from '../../components/common/FadeIn';
+import InfinityBlackHole from '../../components/InfinityBlackHole';
 import { MapPin, Code2, Layers, Cpu } from 'lucide-react';
 
 const techStack = [
@@ -16,8 +16,8 @@ const AboutSection = () => {
       id="about"
       className="relative w-full bg-transparent text-[#D7E2EA]
         flex flex-col lg:flex-row items-start justify-start
-        pt-[90px] pb-16 px-6 sm:px-12 md:px-16 lg:px-20 lg:pb-0
-        min-h-screen lg:h-screen lg:max-h-screen z-30"
+        pt-10 sm:pt-[90px] pb-6 sm:pb-16 px-6 sm:px-12 md:px-16 lg:px-20 lg:pb-0
+        min-h-0 sm:min-h-screen lg:h-screen lg:max-h-screen z-30"
     >
 
       <div className="w-full max-w-[1400px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 h-full items-start relative">
@@ -28,7 +28,7 @@ const AboutSection = () => {
           <FadeIn delay={0.1} y={20}>
             <div className="flex items-center gap-3">
               <div className="h-[1px] w-8 bg-[#D7E2EA]/50" />
-              <span className="text-[#D7E2EA]/70 uppercase tracking-[0.3em] text-xs font-bold">
+              <span className="text-[#D7E2EA]/70 uppercase tracking-[0.3em] text-sm font-bold">
                 About Me
               </span>
             </div>
@@ -41,17 +41,17 @@ const AboutSection = () => {
           </FadeIn>
 
           <FadeIn delay={0.3} y={30} className="flex flex-col gap-5 sm:gap-6 max-w-2xl">
-            <p className="text-[#D7E2EA]/80 font-light text-base sm:text-lg lg:text-xl leading-relaxed">
+            <p className="text-[#D7E2EA]/80 font-light text-lg sm:text-xl lg:text-2xl leading-relaxed">
               I’m a Computer Science Engineering student and self-driven developer focused on building modern, responsive, and production-ready digital experiences. I enjoy turning ideas into clean interfaces, scalable web applications, and interactive products.
             </p>
-            <p className="text-[#D7E2EA]/60 font-light text-sm sm:text-base lg:text-lg leading-relaxed">
+            <p className="text-[#D7E2EA]/60 font-light text-base sm:text-lg lg:text-xl leading-relaxed">
               <strong className="text-[#D7E2EA]/90 font-medium">Current focus:</strong> Building real-world projects, expanding my full-stack skills, and turning creative ideas into useful digital products.
             </p>
           </FadeIn>
 
           <FadeIn delay={0.4} y={20} className="flex flex-wrap items-center gap-6 mt-4 sm:mt-6">
-            <div className="flex items-center gap-2 text-[#D7E2EA]/50 font-medium text-sm tracking-wide uppercase">
-              <MapPin size={16} />
+            <div className="flex items-center gap-2 text-[#D7E2EA]/50 font-medium text-base tracking-wide uppercase">
+              <MapPin size={18} />
               <span>Odisha, India</span>
             </div>
           </FadeIn>

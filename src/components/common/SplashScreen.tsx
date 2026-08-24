@@ -8,13 +8,15 @@ interface SplashScreenProps {
 const SplashScreen = ({ onComplete }: SplashScreenProps) => {
   const [isVisible, setIsVisible] = useState(true);
   const [displayText, setDisplayText] = useState('');
+  const [progress, setProgress] = useState(0);
+  const [isMinTimeElapsed, setIsMinTimeElapsed] = useState(false);
+  const [isHeroLoaded, setIsHeroLoaded] = useState(false);
   const fullText = "MUNA'S ERA";
 
+  // Typewriter and Timer Effect
   useEffect(() => {
-    // Lock body scroll while splash is active
     document.body.style.overflow = 'hidden';
 
-    // Typewriter effect for MUNA'S ERA
     let charIndex = 0;
     const startDelay = setTimeout(() => {
       const typeInterval = setInterval(() => {
@@ -28,10 +30,28 @@ const SplashScreen = ({ onComplete }: SplashScreenProps) => {
       return () => clearInterval(typeInterval);
     }, 300);
 
-    const duration = 1500; // 1.5 seconds total loading time
-    
-    const finishTimeout = setTimeout(() => {
-      // Trigger the GSAP Curve Transition
+    const minTime = setTimeout(() => setIsMinTimeElapsed(true), 1500);
+
+    const handleHeroLoaded = (e: any) => {
+      const { loaded, total } = e.detail;
+      setProgress(Math.round((loaded / total) * 100));
+      if (loaded >= total) {
+        setIsHeroLoaded(true);
+      }
+    };
+    window.addEventListener('hero-image-loaded', handleHeroLoaded);
+
+    return () => {
+      clearTimeout(startDelay);
+      clearTimeout(minTime);
+      window.removeEventListener('hero-image-loaded', handleHeroLoaded);
+      document.body.style.overflow = '';
+    };
+  }, []);
+
+  // Exit Effect
+  useEffect(() => {
+    if (isMinTimeElapsed && isHeroLoaded && isVisible) {
       const styles = ['liquid', 'wave'];
       const transitionStyle = styles[Math.floor(Math.random() * styles.length)];
       const directions = ['bottom', 'top', 'left', 'right', 'top-left', 'bottom-right'];
@@ -43,19 +63,12 @@ const SplashScreen = ({ onComplete }: SplashScreenProps) => {
       });
       window.dispatchEvent(event);
 
-      // Wait exactly until the screen is fully covered by GSAP before unmounting (approx 850ms)
       setTimeout(() => {
         setIsVisible(false);
-        document.body.style.overflow = ''; // Release scroll lock
+        document.body.style.overflow = '';
       }, 850);
-    }, duration + 200);
-
-    return () => {
-      document.body.style.overflow = '';
-      clearTimeout(finishTimeout);
-      clearTimeout(startDelay);
-    };
-  }, []);
+    }
+  }, [isMinTimeElapsed, isHeroLoaded, isVisible]);
 
   return (
     <AnimatePresence onExitComplete={onComplete}>
@@ -93,6 +106,25 @@ const SplashScreen = ({ onComplete }: SplashScreenProps) => {
               />
             </h1>
           </div>
+          
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.5, duration: 0.5 }}
+            className="flex flex-col items-center gap-2"
+          >
+            <div className="w-32 sm:w-48 h-1 bg-[#D7E2EA]/10 rounded-full overflow-hidden">
+              <motion.div 
+                className="h-full bg-[#D7E2EA]"
+                initial={{ width: 0 }}
+                animate={{ width: `${progress}%` }}
+                transition={{ ease: "easeOut", duration: 0.2 }}
+              />
+            </div>
+            <p className="text-[#D7E2EA]/50 text-xs sm:text-sm font-light tracking-widest uppercase">
+              {progress === 100 ? 'Ready' : `Loading ${progress}%`}
+            </p>
+          </motion.div>
         </motion.div>
       )}
     </AnimatePresence>

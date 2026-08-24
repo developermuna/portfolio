@@ -1,7 +1,7 @@
 import { useEffect, useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowLeft } from 'lucide-react';
-import { getProjects } from '../utils/dataStore';
+import { useSupabaseData } from '../../hooks/useSupabaseData';
 
 const categories = [
   { id: 'all', label: 'All Projects' },
@@ -11,6 +11,7 @@ const categories = [
 ];
 
 const AllProjectsPage = () => {
+  const { projects } = useSupabaseData();
   const [activeCategory, setActiveCategory] = useState('all');
 
   // Parse URL hash for category parameter and ensure page starts at top
@@ -28,14 +29,13 @@ const AllProjectsPage = () => {
   }, []);
 
   const filteredProjects = useMemo(() => {
-    const projects = getProjects();
     return activeCategory === 'all' 
       ? projects 
       : projects.filter(p => p.category === activeCategory);
-  }, [activeCategory]);
+  }, [activeCategory, projects]);
 
   return (
-    <div className="min-h-screen bg-[#0C0C0C] text-[#D7E2EA] font-kanit pb-20">
+    <div className="min-h-screen bg-[#0C0C0C] text-[#D7E2EA] font-kanit pb-20 relative z-50">
       {/* Sticky Header */}
       <div className="sticky top-0 z-40 bg-[#0C0C0C]/90 backdrop-blur-xl border-b border-[#D7E2EA]/10 w-full pt-20 sm:pt-24 pb-4 px-6 sm:px-12 md:px-16 lg:px-24">
         <div className="max-w-[1400px] mx-auto flex flex-col xl:flex-row xl:items-end justify-between gap-4">

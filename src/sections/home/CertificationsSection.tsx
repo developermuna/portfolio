@@ -1,11 +1,11 @@
 import { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import FadeIn from '../components/FadeIn';
+import FadeIn from '../../components/common/FadeIn';
 
-import { getCertifications, type Certification } from '../utils/dataStore';
+import { useSupabaseData, type Certification } from '../../hooks/useSupabaseData';
 
 const CertificationsSection = () => {
-  const certifications = getCertifications();
+  const { certifications } = useSupabaseData();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
   const [cardsToShow, setCardsToShow] = useState(3);
@@ -162,16 +162,18 @@ const CertificationsSection = () => {
                       <span className="text-[#D7E2EA]/50 font-medium tracking-widest uppercase text-xs sm:text-sm">
                         {cert.date}
                       </span>
-                      <span className="bg-[#D7E2EA]/10 text-[#D7E2EA] px-3 py-1 rounded-full text-[10px] sm:text-xs font-semibold uppercase tracking-wider">
+                      <span className="bg-[#D7E2EA]/10 text-[#D7E2EA] px-3 py-1 rounded-full text-xs sm:text-sm font-semibold uppercase tracking-wider">
                         {cert.issuer}
                       </span>
                     </div>
                     <h3 className="text-[#D7E2EA] font-semibold text-lg sm:text-xl md:text-2xl uppercase tracking-wide mt-1 pointer-events-none">
                       {cert.title}
                     </h3>
-                    <p className="text-[#D7E2EA]/60 font-light leading-relaxed flex-grow text-sm sm:text-base pointer-events-none">
-                      {cert.description}
-                    </p>
+                    {cert.description && (
+                      <p className="text-[#D7E2EA]/60 text-sm sm:text-base mt-1 line-clamp-2 pointer-events-none">
+                        {cert.description}
+                      </p>
+                    )}
                   </div>
                 </div>
               ))}
@@ -238,9 +240,12 @@ const CertificationsSection = () => {
                 <h3 className="text-[#D7E2EA] font-bold text-2xl sm:text-3xl uppercase tracking-wide">
                   {selectedCert.title}
                 </h3>
-                <p className="text-[#D7E2EA]/70 font-light leading-relaxed text-base sm:text-lg">
-                  {selectedCert.description}
-                </p>
+                {selectedCert.description && (
+                  <p className="text-[#D7E2EA]/80 text-base sm:text-lg mt-2 leading-relaxed">
+                    {selectedCert.description}
+                  </p>
+                )}
+
               </div>
             </motion.div>
           </motion.div>

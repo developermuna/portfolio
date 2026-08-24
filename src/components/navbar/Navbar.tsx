@@ -1,13 +1,13 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X } from 'lucide-react';
+
 const navLinks = [
-  { name: 'About', href: '#about' },
-  { name: 'Skills', href: '#skills' },
-  { name: 'Projects', href: '#projects' },
-  { name: 'Education', href: '#experience' },
-  { name: 'Achievements', href: '#certifications' },
-  { name: 'Testimonials', href: '#testimonials' }
+  { name: 'About', href: '/#about' },
+  { name: 'Skills', href: '/#skills' },
+  { name: 'Projects', href: '/#projects' },
+  { name: 'Education', href: '/#experience' },
+  { name: 'Achievements', href: '/#certifications' },
+  { name: 'Testimonials', href: '/#testimonials' }
 ];
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -16,7 +16,7 @@ const Navbar = () => {
   const ActionPill = ({ className = "" }: { className?: string }) => (
     <div className={`flex items-center bg-[#D7E2EA] p-1 rounded-full shadow-[0_0_15px_rgba(215,226,234,0.2)] hover:scale-105 transition-transform duration-300 ${className}`}>
       <a 
-        href="#services"
+        href="/#services"
         onClick={() => setIsOpen(false)}
         className="flex items-center justify-center pl-3 pr-2 sm:pl-5 sm:pr-3 py-1.5 text-[#0C0C0C] font-bold uppercase tracking-wide text-xs md:text-sm whitespace-nowrap"
       >
@@ -40,13 +40,13 @@ const Navbar = () => {
         initial={{ y: -100 }}
         animate={{ y: 0 }}
         transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-        className="fixed top-0 left-0 w-full z-[100000] px-4 md:px-10 py-3 bg-[#0C0C0C]/80 backdrop-blur-md border-b border-[#D7E2EA]/10"
+        className="fixed top-0 left-0 w-full z-[100000] px-4 md:px-10 py-3 bg-[#0C0C0C] border-b border-[#D7E2EA]/10"
       >
         <div className="max-w-7xl mx-auto flex justify-between items-center gap-4">
           
           <div className="flex items-center gap-8 sm:gap-10 md:gap-14">
             {/* Logo */}
-            <a href="#" className="flex-shrink-0" onClick={() => setIsOpen(false)}>
+            <a href="/" className="flex-shrink-0" onClick={() => setIsOpen(false)}>
               <img 
                 src="https://pub-300810ae570e4983a2a928a706ef0133.r2.dev/Portfolio/Assets/logo.png" 
                 alt="Muna Logo" 
@@ -74,10 +74,12 @@ const Navbar = () => {
 
             {/* Mobile Hamburger Toggle */}
             <button 
-              className="md:hidden text-[#D7E2EA] p-2 focus:outline-none"
+              className="md:hidden flex flex-col items-end justify-center w-10 h-10 p-2 gap-[5px] focus:outline-none group z-[100001]"
               onClick={() => setIsOpen(!isOpen)}
             >
-              {isOpen ? <X size={28} /> : <Menu size={28} />}
+              <div className={`h-[2px] bg-[#D7E2EA] rounded-full transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] ${isOpen ? 'w-6 rotate-45 translate-y-[7px]' : 'w-6 group-hover:w-6'}`} />
+              <div className={`h-[2px] bg-[#D7E2EA] rounded-full transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] ${isOpen ? 'w-0 opacity-0 translate-x-2' : 'w-5 group-hover:w-6'}`} />
+              <div className={`h-[2px] bg-[#D7E2EA] rounded-full transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] ${isOpen ? 'w-6 -rotate-45 -translate-y-[7px]' : 'w-4 group-hover:w-6'}`} />
             </button>
           </div>
 
@@ -88,22 +90,30 @@ const Navbar = () => {
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            initial={{ opacity: 0, y: -20 }}
+            initial={{ opacity: 0, y: '-100%' }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.3 }}
-            className="fixed top-[65px] sm:top-[69px] left-0 right-0 bottom-0 z-[90] bg-[#0C0C0C]/95 backdrop-blur-xl flex flex-col items-center justify-center gap-8 pb-20"
+            exit={{ opacity: 0, y: '-100%' }}
+            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+            className="fixed top-0 left-0 right-0 bottom-0 z-[90] bg-[#0C0C0C] flex flex-col items-center justify-center pt-16 pb-20 overflow-hidden"
           >
-            <div className="flex flex-col items-center gap-6">
-              {navLinks.map((link) => (
-                <a
+            <div className="flex flex-col items-center gap-8 w-full">
+              {navLinks.map((link, i) => (
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 20 }}
+                  transition={{ duration: 0.4, delay: isOpen ? 0.1 + (i * 0.05) : 0, ease: [0.16, 1, 0.3, 1] }}
                   key={link.name}
-                  href={link.href}
-                  onClick={() => setIsOpen(false)}
-                  className="text-[#D7E2EA] font-black uppercase tracking-widest text-2xl sm:text-3xl hover:text-white transition-colors"
+                  className="w-full"
                 >
-                  {link.name}
-                </a>
+                  <a
+                    href={link.href}
+                    onClick={() => setIsOpen(false)}
+                    className="block text-[#D7E2EA] font-black uppercase tracking-widest text-2xl sm:text-3xl hover:text-white hover:scale-105 transition-all w-full text-center py-2"
+                  >
+                    {link.name}
+                  </a>
+                </motion.div>
               ))}
             </div>
           </motion.div>

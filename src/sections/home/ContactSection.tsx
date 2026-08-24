@@ -1,6 +1,7 @@
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import FadeIn from '../components/FadeIn';
-import { Mail, Phone, MapPin } from 'lucide-react';
+import FadeIn from '../../components/common/FadeIn';
+import { Mail, Phone, MapPin, Download } from 'lucide-react';
 
 const Github = ({ size }: { size: number }) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.2c3-.3 6-1.5 6-6.5a4.6 4.6 0 0 0-1.3-3.2 4.2 4.2 0 0 0-.1-3.2s-1.1-.3-3.5 1.3a12.3 12.3 0 0 0-6.2 0C6.5 2.8 5.4 3.1 5.4 3.1a4.2 4.2 0 0 0-.1 3.2A4.6 4.6 0 0 0 4 9.5c0 5 3 6.2 6 6.5a4.8 4.8 0 0 0-1 3.2v4"/><path d="M9 18c-4.5 1.5-5-2.5-7-3"/></svg>
@@ -21,9 +22,9 @@ const WhatsApp = ({ size }: { size: number }) => (
 );
 
 const legalLinks = [
-  { label: 'Privacy Policy', href: '#privacy' },
-  { label: 'Terms & Condition', href: '#terms' },
-  { label: 'Return Policy', href: '#refund-policy' },
+  { label: 'Privacy Policy', href: '/privacy' },
+  { label: 'Terms & Condition', href: '/terms' },
+  { label: 'Return Policy', href: '/refund' },
 ];
 
 const socialLinks = [
@@ -34,6 +35,27 @@ const socialLinks = [
 ];
 
 const ContactSection = () => {
+  const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
+
+  useEffect(() => {
+    const handleBeforeInstallPrompt = (e: Event) => {
+      e.preventDefault();
+      setDeferredPrompt(e);
+    };
+    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+    return () => window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+  }, []);
+
+  const handleInstallClick = async () => {
+    if (deferredPrompt) {
+      deferredPrompt.prompt();
+      const { outcome } = await deferredPrompt.userChoice;
+      if (outcome === 'accepted') {
+        setDeferredPrompt(null);
+      }
+    }
+  };
+
   return (
     <section
       id="contact"
@@ -66,7 +88,7 @@ const ContactSection = () => {
               className="group relative inline-flex items-center justify-center gap-3 px-6 py-3 sm:px-8 sm:py-4 bg-[#D7E2EA] text-[#0C0C0C] rounded-full overflow-hidden"
             >
               <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/40 to-transparent -translate-x-full group-hover:animate-[shimmer_1s_infinite]" />
-              <span className="font-bold uppercase tracking-widest text-xs sm:text-sm relative z-10">
+              <span className="font-bold uppercase tracking-widest text-sm sm:text-base relative z-10">
                 Start a Conversation
               </span>
               <span className="relative z-10 transition-transform duration-300 group-hover:translate-x-1">
@@ -133,7 +155,7 @@ const ContactSection = () => {
             
             {/* Legal Links */}
             <FadeIn delay={0.4} y={20} className="col-span-1 md:col-span-4 flex flex-col gap-4">
-              <h4 className="text-[#D7E2EA]/40 text-[10px] font-bold uppercase tracking-[0.2em]">Legal</h4>
+              <h4 className="text-[#D7E2EA]/40 text-xs font-bold uppercase tracking-[0.2em]">Legal</h4>
               <div className="flex flex-col gap-3">
                 {legalLinks.map((link) => (
                   <a
@@ -150,7 +172,7 @@ const ContactSection = () => {
 
             {/* Connect Icons */}
             <FadeIn delay={0.5} y={20} className="col-span-1 md:col-span-3 flex flex-col gap-4">
-              <h4 className="text-[#D7E2EA]/40 text-[10px] font-bold uppercase tracking-[0.2em]">Connect</h4>
+              <h4 className="text-[#D7E2EA]/40 text-xs font-bold uppercase tracking-[0.2em]">Connect</h4>
               <div className="flex flex-wrap gap-3 sm:gap-4">
                 {socialLinks.map((link, idx) => (
                   <a
@@ -166,10 +188,23 @@ const ContactSection = () => {
 
           </div>
 
+          {/* App Install Button */}
+          {deferredPrompt && (
+            <FadeIn delay={0.55} y={20} className="w-full mt-10 sm:mt-16 flex justify-center pb-4">
+              <button 
+                onClick={handleInstallClick}
+                className="flex items-center gap-2 bg-[#D7E2EA] text-[#0C0C0C] px-6 py-3 rounded-full font-bold uppercase tracking-widest text-sm hover:scale-105 transition-transform duration-300 shadow-xl"
+              >
+                <Download size={18} />
+                Install App
+              </button>
+            </FadeIn>
+          )}
+
         </div>
 
         {/* BOTTOM: Copyright & Signature */}
-        <FadeIn delay={0.6} className="w-full pt-6 border-t border-[#D7E2EA]/10 flex flex-col sm:flex-row items-center justify-between gap-3 text-[#D7E2EA]/40 text-[10px] font-medium uppercase tracking-widest text-center sm:text-left">
+        <FadeIn delay={0.6} className="w-full pt-6 border-t border-[#D7E2EA]/10 flex flex-col sm:flex-row items-center justify-between gap-3 text-[#D7E2EA]/40 text-xs font-medium uppercase tracking-widest text-center sm:text-left">
           <span>&copy; 2026 Muna Kousalya. All rights reserved.</span>
           <span>Built with passion, creativity & code.</span>
         </FadeIn>

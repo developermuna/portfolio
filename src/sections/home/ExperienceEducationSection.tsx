@@ -1,8 +1,8 @@
 import { useRef, useState, useEffect } from 'react';
 import { motion, useScroll, useTransform, MotionValue } from 'framer-motion';
-import FadeIn from '../components/FadeIn';
+import FadeIn from '../../components/common/FadeIn';
 
-import { experiences } from '../data/portfolioData';
+import { experiences } from '../../data/portfolioData';
 
 const TimelineItem = ({ 
   exp, 
@@ -53,8 +53,8 @@ const TimelineItem = ({
         />
         
         <h3 className="font-kanit font-light text-3xl text-[#D7E2EA] mb-1">{exp.year}</h3>
-        <h4 className="font-kanit font-semibold text-lg text-[#D7E2EA]/90 mb-1 leading-tight">{exp.role}</h4>
-        <p className="font-light text-[#D7E2EA]/60 text-sm">
+        <h4 className="font-kanit font-semibold text-xl text-[#D7E2EA]/90 mb-1 leading-tight">{exp.role}</h4>
+        <p className="font-light text-[#D7E2EA]/60 text-base">
           {exp.company}
           {exp.description && <span className="block mt-1 opacity-80">{exp.description}</span>}
         </p>
@@ -74,7 +74,7 @@ const TimelineItem = ({
               
               <h3 className="font-kanit font-light text-4xl lg:text-5xl text-[#D7E2EA] mb-2">{exp.year}</h3>
               <h4 className="font-kanit font-semibold text-xl lg:text-2xl text-[#D7E2EA]/90 mb-2 leading-tight max-w-[400px]">{exp.role}</h4>
-              <p className="font-light text-[#D7E2EA]/60 text-base max-w-[360px]">
+              <p className="font-light text-[#D7E2EA]/60 text-lg max-w-[360px]">
                 {exp.company}
                 {exp.description && <span className="block mt-2 opacity-80">{exp.description}</span>}
               </p>
@@ -94,7 +94,7 @@ const TimelineItem = ({
               
               <h3 className="font-kanit font-light text-4xl lg:text-5xl text-[#D7E2EA] mb-2">{exp.year}</h3>
               <h4 className="font-kanit font-semibold text-xl lg:text-2xl text-[#D7E2EA]/90 mb-2 leading-tight max-w-[400px]">{exp.role}</h4>
-              <p className="font-light text-[#D7E2EA]/60 text-base max-w-[360px]">
+              <p className="font-light text-[#D7E2EA]/60 text-lg max-w-[360px]">
                 {exp.company}
                 {exp.description && <span className="block mt-2 opacity-80">{exp.description}</span>}
               </p>
@@ -137,7 +137,7 @@ const ExperienceEducationSection = () => {
 
   return (
     <section id="experience" className="bg-[#0C0C0C] relative z-30" style={{ marginBottom: gapMargin }}>
-      <div ref={containerRef} className={isMobile ? "h-[200vh]" : "h-[250vh]"}>
+      <div ref={containerRef} className={isMobile ? "h-[180vh]" : "h-[250vh]"}>
         
         <div className="sticky top-0 h-screen w-full overflow-hidden flex flex-col justify-center rounded-t-[40px] sm:rounded-t-[50px] md:rounded-t-[60px] bg-[#0C0C0C]">
           

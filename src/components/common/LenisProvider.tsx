@@ -33,7 +33,10 @@ const LenisProvider: React.FC<LenisProviderProps> = ({ children }) => {
       const anchor = target.closest('a');
       if (anchor) {
         const href = anchor.getAttribute('href');
-        if (href && href.startsWith('#')) {
+        if (href && (href.startsWith('#') || href.startsWith('/'))) {
+          // Ignore external links even if they somehow matched (e.g. target="_blank")
+          if (anchor.getAttribute('target') === '_blank') return;
+          
           e.preventDefault();
           
           const targetHref = href === '#' ? '#home' : href;

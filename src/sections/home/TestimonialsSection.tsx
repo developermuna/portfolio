@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Star, ChevronLeft, ChevronRight, Plus, X, CheckCircle2 } from 'lucide-react';
-import FadeIn from '../components/FadeIn';
+import FadeIn from '../../components/common/FadeIn';
 
-import { type Review, defaultReviews } from '../data/portfolioData';
+import { type Review, defaultReviews } from '../../data/portfolioData';
 
 const LOCAL_STORAGE_KEY = 'muna_portfolio_reviews';
 
