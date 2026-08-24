@@ -13,8 +13,9 @@ export default function CurveTransition() {
       const transitionType = e.detail?.type || 'liquid';
       const direction = e.detail?.direction || 'bottom';
       const layerType = e.detail?.layerType || 'multi';
+      const isSplashExit = e.detail?.isSplashExit || false;
       
-      console.log(`GSAP ${transitionType} Transition from ${direction} (${layerType}) Triggered for:`, targetHash);
+      console.log(`GSAP ${transitionType} Transition from ${direction} (${layerType}) Triggered for:`, isSplashExit ? 'Splash Exit' : targetHash);
 
       // Calculate rotation based on direction
       let rotation = 0;
@@ -91,20 +92,33 @@ export default function CurveTransition() {
         stagger: 0.08,
       }, "-=0.1")
       .add(() => {
-          window.location.hash = targetHash === '#home' ? '' : targetHash;
-          setTimeout(() => {
-            const newEl = targetHash === '#home' ? document.body : document.querySelector(targetHash);
-            if (newEl) {
-              if ((window as any).lenis) {
-                const isMobile = window.innerWidth < 768;
-                (window as any).lenis.scrollTo(newEl, { immediate: true, offset: isMobile ? -80 : -100 });
-              } else if (targetHash === '#home') {
-                window.scrollTo(0, 0);
-              } else {
-                newEl.scrollIntoView();
+          if (!isSplashExit) {
+            window.location.hash = targetHash === '#home' ? '' : targetHash;
+            setTimeout(() => {
+              try {
+                const isDedicatedPage = ['#privacy', '#terms', '#refund', '#admin', '#all-projects', '#all-products'].some(route => targetHash.startsWith(route));
+                if (isDedicatedPage || targetHash === '#home') {
+                  window.scrollTo(0, 0);
+                  if ((window as any).lenis) {
+                    (window as any).lenis.scrollTo(0, { immediate: true });
+                  }
+                  return;
+                }
+
+                const cleanHash = targetHash.split('?')[0];
+                const newEl = document.querySelector(cleanHash);
+                if (newEl) {
+                  if ((window as any).lenis) {
+                    (window as any).lenis.scrollTo(newEl, { immediate: true, offset: 0 });
+                  } else {
+                    newEl.scrollIntoView();
+                  }
+                }
+              } catch (err) {
+                console.error('CurveTransition navigation error:', err);
               }
-            }
-          }, 30); // 30ms is just enough for React to process the hash change
+            }, 30); // 30ms is just enough for React to process the hash change
+          }
       }, "-=0.2") // Trigger scroll/hash slightly before fully covered
       .to(paths, {
         duration: 0.45,

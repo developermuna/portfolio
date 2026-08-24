@@ -1,23 +1,23 @@
 import { useEffect, useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowLeft } from 'lucide-react';
-import { getProjects } from '../utils/dataStore';
+import { ArrowLeft, ShoppingCart, Eye } from 'lucide-react';
+import { getProducts } from '../utils/dataStore';
 
 const categories = [
-  { id: 'all', label: 'All Projects' },
-  { id: 'web', label: 'Web Design' },
-  { id: 'app', label: 'App Design' },
+  { id: 'all', label: 'All Products' },
+  { id: 'web', label: 'Web Development' },
+  { id: 'app', label: 'App Development' },
   { id: 'interior', label: 'Interior Design' },
 ];
 
-const AllProjectsPage = () => {
+const AllProductsPage = () => {
   const [activeCategory, setActiveCategory] = useState('all');
 
   // Parse URL hash for category parameter and ensure page starts at top
   useEffect(() => {
     window.scrollTo(0, 0);
     
-    // The hash might look like "#all-projects?category=app"
+    // The hash might look like "#all-products?category=app"
     const hash = window.location.hash;
     if (hash.includes('?category=')) {
       const categoryParam = hash.split('?category=')[1];
@@ -27,11 +27,11 @@ const AllProjectsPage = () => {
     }
   }, []);
 
-  const filteredProjects = useMemo(() => {
-    const projects = getProjects();
+  const filteredProducts = useMemo(() => {
+    const products = getProducts();
     return activeCategory === 'all' 
-      ? projects 
-      : projects.filter(p => p.category === activeCategory);
+      ? products 
+      : products.filter(p => p.category === activeCategory);
   }, [activeCategory]);
 
   return (
@@ -48,7 +48,7 @@ const AllProjectsPage = () => {
             }}
           >
             <h1 className="hero-heading font-black text-3xl sm:text-4xl md:text-5xl tracking-tight uppercase leading-none mb-2 overflow-hidden flex">
-              {"All Projects".split("").map((char, index) => (
+              {"All Products".split("").map((char, index) => (
                 <motion.span
                   key={index}
                   variants={{
@@ -68,7 +68,7 @@ const AllProjectsPage = () => {
               }}
               className="text-[#D7E2EA]/60 max-w-xl text-sm sm:text-base font-light"
             >
-              A complete archive of my work and digital experiences.
+              Browse premium digital products, templates, and 3D assets ready for your next project.
             </motion.p>
           </motion.div>
           
@@ -91,7 +91,7 @@ const AllProjectsPage = () => {
             </div>
             
             <a 
-              href="#projects" 
+              href="#services" 
               className="flex items-center justify-center gap-2 text-[#0C0C0C] bg-[#D7E2EA] hover:bg-white px-4 py-2 rounded-full transition-colors group flex-shrink-0 w-max text-xs sm:text-sm"
             >
               <ArrowLeft size={16} className="transform group-hover:-translate-x-1 transition-transform" />
@@ -101,14 +101,14 @@ const AllProjectsPage = () => {
         </div>
       </div>
 
-      {/* Projects Grid */}
+      {/* Products Grid */}
       <div className="max-w-[1400px] mx-auto mt-8 px-6 sm:px-12 md:px-16 lg:px-24">
         <motion.div layout className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
           <AnimatePresence mode="popLayout">
-            {filteredProjects.map((project) => (
+            {filteredProducts.map((product) => (
               <motion.div
                 layout
-                key={project.number}
+                key={product.id}
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.9 }}
@@ -119,48 +119,59 @@ const AllProjectsPage = () => {
                 <div className="w-full aspect-[4/3] rounded-3xl overflow-hidden relative mb-6">
                   <div className="absolute inset-0 bg-[#0C0C0C]/30 group-hover:bg-transparent transition-colors duration-500 z-10" />
                   <img 
-                    src={project.image} 
-                    alt={project.name} 
+                    src={product.image} 
+                    alt={product.title} 
                     className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700"
                   />
-                  <div className="absolute top-4 right-4 z-20 backdrop-blur-md bg-[#0C0C0C]/50 px-3 py-1 rounded-full border border-white/10">
-                    <span className="font-bold text-sm tracking-widest">{project.number}</span>
-                  </div>
                 </div>
 
                 {/* Content */}
                 <div className="flex flex-col">
                   <div className="flex items-center gap-3 mb-2">
                     <span className="text-[9px] uppercase tracking-widest font-bold text-gray-400 px-2 py-0.5 rounded-sm border border-white/10">
-                      {project.category}
+                      {categories.find(c => c.id === product.category)?.label || product.category}
                     </span>
                   </div>
                   <h3 className="text-lg sm:text-xl font-semibold uppercase tracking-wide mb-2 text-white group-hover:text-blue-400 transition-colors">
-                    {project.name}
+                    {product.title}
                   </h3>
                   <p className="text-gray-400 font-light leading-relaxed text-xs sm:text-sm mb-4 line-clamp-3">
-                    {project.description}
+                    {product.description}
                   </p>
                   
-                  <a
-                    href={project.url || '#'}
-                    target={project.url ? "_blank" : "_self"}
-                    rel="noopener noreferrer"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      if (!project.url) {
+                  {/* Action Buttons */}
+                  <div className="flex flex-row gap-3 mt-auto">
+                    <button
+                      type="button"
+                      onClick={(e) => {
                         e.preventDefault();
-                        alert('Visit Site link is not available for this project.');
-                      }
-                    }}
-                    className="mt-auto w-max rounded-full border border-gray-500 text-gray-300
-                      font-medium uppercase tracking-widest
-                      px-4 py-2 text-[10px] sm:text-xs flex items-center justify-center gap-2
-                      cursor-pointer transition-all duration-300
-                      hover:bg-white hover:text-black hover:border-white"
-                  >
-                    Visit Site
-                  </a>
+                        e.stopPropagation();
+                        alert('Checkout functionality coming soon!');
+                      }}
+                      className="flex-1 flex items-center justify-center gap-1.5 rounded-full bg-white text-black
+                        font-bold uppercase tracking-widest px-3 py-2 text-[10px] sm:text-xs
+                        cursor-pointer transition-all duration-300 hover:bg-gray-200 hover:scale-[1.02]"
+                    >
+                      <ShoppingCart size={14} />
+                      Buy Now
+                    </button>
+                    
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        alert('Product details view coming soon!');
+                      }}
+                      className="flex-1 flex items-center justify-center gap-1.5 rounded-full border border-gray-500 text-gray-300
+                        font-bold uppercase tracking-widest px-3 py-2 text-[10px] sm:text-xs
+                        cursor-pointer transition-all duration-300
+                        hover:bg-white/10 hover:border-white hover:text-white"
+                    >
+                      <Eye size={14} />
+                      View
+                    </button>
+                  </div>
                 </div>
               </motion.div>
             ))}
@@ -171,4 +182,4 @@ const AllProjectsPage = () => {
   );
 };
 
-export default AllProjectsPage;
+export default AllProductsPage;

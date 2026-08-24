@@ -4,11 +4,11 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import FadeIn from '../components/FadeIn';
 
-import { projects } from '../data/portfolioData';
+import { getProjects, type Project } from '../utils/dataStore';
 
 gsap.registerPlugin(ScrollTrigger);
 
-const HorizontalProjectCard = ({ project }: { project: typeof projects[0] }) => {
+const HorizontalProjectCard = ({ project }: { project: Project }) => {
   const ref = useRef<HTMLDivElement>(null);
   const x = useMotionValue(0);
   const y = useMotionValue(0);
@@ -38,8 +38,8 @@ const HorizontalProjectCard = ({ project }: { project: typeof projects[0] }) => 
   };
 
   return (
-    <div className="w-[75vw] sm:w-[50vw] md:w-[35vw] lg:w-[25vw] flex-shrink-0 h-full flex flex-col justify-center px-4 sm:px-6">
-      <div className="flex flex-col gap-3 sm:gap-4 border-l-2 border-[#D7E2EA]/20 pl-4 sm:pl-6 py-4 h-[60vh] sm:h-[50vh] justify-center perspective-[1000px]">
+    <div className="w-[70vw] sm:w-[45vw] md:w-[30vw] lg:w-[22vw] flex-shrink-0 h-full flex flex-col justify-center px-4 sm:px-6">
+      <div className="flex flex-col gap-3 sm:gap-4 border-l-2 border-[#D7E2EA]/20 pl-4 sm:pl-6 py-4 h-[55vh] sm:h-[45vh] justify-center perspective-[1000px]">
         
         {/* Project Image */}
         <motion.div 
@@ -57,13 +57,35 @@ const HorizontalProjectCard = ({ project }: { project: typeof projects[0] }) => 
           />
         </motion.div>
 
-        {/* Project Number (Reduced Size) */}
-        <span
-          className="hero-heading font-black leading-none opacity-50"
-          style={{ fontSize: 'clamp(1.5rem, 4vw, 40px)' }}
-        >
-          {project.number}
-        </span>
+        {/* Top Info Row: Number and Visit Button */}
+        <div className="flex justify-between items-center w-full">
+          <span
+            className="hero-heading font-black leading-none opacity-50"
+            style={{ fontSize: 'clamp(1.5rem, 4vw, 40px)' }}
+          >
+            {project.number}
+          </span>
+          
+          <a
+            href={project.url || '#'}
+            target={project.url ? "_blank" : "_self"}
+            rel="noopener noreferrer"
+            onClick={(e) => {
+              if (!project.url) {
+                e.preventDefault();
+                alert('Visit Site link is not available for this project.');
+              }
+            }}
+            className="rounded-full border-2 border-[#D7E2EA] text-[#D7E2EA]
+              font-medium uppercase tracking-widest
+              px-4 py-1.5 sm:px-5 sm:py-2 w-max
+              text-[9px] sm:text-[10px] flex items-center justify-center gap-2
+              cursor-pointer transition-colors duration-200
+              hover:bg-[#D7E2EA] hover:text-[#0C0C0C]"
+          >
+            Visit Site
+          </a>
+        </div>
         
         <div className="flex flex-col gap-2">
           <h3
@@ -78,21 +100,6 @@ const HorizontalProjectCard = ({ project }: { project: typeof projects[0] }) => 
           >
             {project.description}
           </p>
-          {project.url && (
-            <a
-              href={project.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mt-2 rounded-full border-2 border-[#D7E2EA] text-[#D7E2EA]
-                font-medium uppercase tracking-widest
-                px-5 py-2 sm:px-6 sm:py-2.5 w-max
-                text-[10px] sm:text-xs
-                cursor-pointer transition-colors duration-200
-                hover:bg-[#D7E2EA] hover:text-[#0C0C0C]"
-            >
-              Visit Site
-            </a>
-          )}
         </div>
       </div>
     </div>
@@ -100,6 +107,7 @@ const HorizontalProjectCard = ({ project }: { project: typeof projects[0] }) => 
 };
 
 const ProjectsSection = () => {
+  const projects = getProjects();
   const containerRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
   const [isMobile, setIsMobile] = useState(false);
@@ -116,8 +124,17 @@ const ProjectsSection = () => {
     const ctx = gsap.context(() => {
       const getScrollAmount = () => {
         if (!trackRef.current) return 0;
-        let trackWidth = trackRef.current.scrollWidth;
-        return -(trackWidth - window.innerWidth);
+        const trackWidth = trackRef.current.scrollWidth;
+        const lastChild = trackRef.current.lastElementChild as HTMLElement;
+        
+        if (!lastChild) {
+          return -(trackWidth - window.innerWidth);
+        }
+        
+        const lastChildWidth = lastChild.offsetWidth;
+        const scrollX = trackWidth - (lastChildWidth / 2) - (window.innerWidth / 2);
+        
+        return -Math.max(0, scrollX);
       };
 
       gsap.to(trackRef.current, {
@@ -128,6 +145,7 @@ const ProjectsSection = () => {
           start: "top top",
           end: () => `+=${getScrollAmount() * -1}`,
           pin: true,
+          anticipatePin: 1,
           scrub: 1, // Smooth scrubbing
           invalidateOnRefresh: true, // Recalculate on resize
         }
@@ -142,7 +160,7 @@ const ProjectsSection = () => {
       <div ref={containerRef} className="h-screen w-full overflow-hidden flex flex-col justify-center rounded-t-[40px] sm:rounded-t-[50px] md:rounded-t-[60px] bg-[#0C0C0C]">
         
         {/* Absolute positioned header so it stays put while cards slide under/past it */}
-        <div className="absolute top-24 sm:top-32 left-0 w-full px-5 sm:px-10 z-10 pointer-events-none">
+        <div className="absolute top-20 sm:top-24 left-0 w-full px-5 sm:px-10 z-10 pointer-events-none">
           <FadeIn delay={0} y={40}>
             <h2
               className="hero-heading font-black uppercase leading-none tracking-tight"
@@ -154,15 +172,15 @@ const ProjectsSection = () => {
         </div>
 
         {/* The moving horizontal track */}
-        <div ref={trackRef} className="flex h-full items-center pt-20 sm:pt-32 px-5 sm:px-10 w-max">
+        <div ref={trackRef} className="flex h-full items-center pt-48 pb-10 sm:pt-64 sm:pb-16 px-5 sm:px-10 w-max">
           {/* Project Cards */}
           {(isMobile ? projects.slice(0, 2) : projects.slice(0, 5)).map((project) => (
             <HorizontalProjectCard key={project.number} project={project} />
           ))}
 
           {/* Final "Show More" Card */}
-          <div className="w-[85vw] sm:w-[60vw] md:w-[45vw] lg:w-[35vw] flex-shrink-0 h-full flex flex-col items-center justify-center px-4 sm:px-8">
-            <div className="flex flex-col items-center justify-center gap-8 border-2 border-[#D7E2EA]/10 rounded-3xl w-full h-[60vh] sm:h-[50vh] bg-[#D7E2EA]/5 hover:bg-[#D7E2EA]/10 transition-colors duration-300">
+          <div className="w-[70vw] sm:w-[45vw] md:w-[30vw] lg:w-[22vw] flex-shrink-0 h-full flex flex-col items-center justify-center px-4 sm:px-6">
+            <div className="flex flex-col items-center justify-center gap-8 border-2 border-[#D7E2EA]/10 rounded-3xl w-full h-[55vh] sm:h-[45vh] bg-[#D7E2EA]/5 hover:bg-[#D7E2EA]/10 transition-colors duration-300">
               <h3 className="text-[#D7E2EA] font-medium text-2xl sm:text-3xl uppercase tracking-widest text-center">
                 More Projects
               </h3>

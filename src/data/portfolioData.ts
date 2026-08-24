@@ -31,85 +31,7 @@ export const experiences = [
   }
 ];
 
-export const projects = [
-  {
-    number: '01',
-    name: 'Bakery Website',
-    category: 'web',
-    description:
-      'A delightful bakery showcase with an elegant product catalog, online ordering system, and warm brand identity that brings the in-store experience online.',
-    url: 'https://bakery.munakousalya.online',
-    image: 'https://images.unsplash.com/photo-1509440159596-0249088772ff?q=80&w=1000&auto=format&fit=crop',
-  },
-  {
-    number: '02',
-    name: 'Muna Kousalya',
-    category: 'web',
-    description:
-      'A polished personal portfolio and business website featuring project showcases, service offerings, and a refined visual identity built to impress.',
-    url: 'https://munakousalya.online',
-    image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=1000&auto=format&fit=crop',
-  },
-  {
-    number: '03',
-    name: 'NovaTech Solutions',
-    category: 'web',
-    description:
-      'A sleek SaaS landing page for a tech startup featuring animated hero sections, interactive pricing tables, and conversion-optimized user flows.',
-    image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=1000&auto=format&fit=crop',
-  },
-  {
-    number: '04',
-    name: 'GreenLeaf Interiors',
-    category: 'interior',
-    description:
-      'An immersive interior design portfolio with 3D room visualizations, before-and-after galleries, and a consultation booking system.',
-    image: 'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?q=80&w=1000&auto=format&fit=crop',
-  },
-  {
-    number: '05',
-    name: 'CloudSync Dashboard',
-    category: 'web',
-    description:
-      'A data-driven web application dashboard with real-time analytics charts, team collaboration tools, and a clean, intuitive admin interface.',
-    image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=1000&auto=format&fit=crop',
-  },
-  {
-    number: '06',
-    name: 'EcoTrack App',
-    category: 'app',
-    description: 'A mobile-first web app helping users track their carbon footprint with gamified features and real-time social leaderboards.',
-    image: 'https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?q=80&w=1000&auto=format&fit=crop',
-  },
-  {
-    number: '07',
-    name: 'FinDash Analytics',
-    category: 'web',
-    description: 'A comprehensive financial dashboard offering real-time crypto charting, portfolio tracking, and AI-powered insights.',
-    image: 'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?q=80&w=1000&auto=format&fit=crop',
-  },
-  {
-    number: '08',
-    name: 'ArtGallery VR',
-    category: 'interior',
-    description: 'An interactive virtual reality art gallery built with WebGL, allowing users to walk through curated digital exhibitions.',
-    image: 'https://images.unsplash.com/photo-1561214115-f2f134cc4912?q=80&w=1000&auto=format&fit=crop',
-  },
-  {
-    number: '09',
-    name: 'HealthSync Portal',
-    category: 'web',
-    description: 'A secure patient-doctor communication portal featuring video consultations, medical records management, and automated appointment scheduling.',
-    image: 'https://images.unsplash.com/photo-1576091160550-2173ff9e5ee5?q=80&w=1000&auto=format&fit=crop',
-  },
-  {
-    number: '10',
-    name: 'Apex AI Assistant',
-    category: 'app',
-    description: 'A productivity tool powered by advanced language models that automates email drafting, scheduling, and meeting summaries.',
-    image: 'https://images.unsplash.com/photo-1620712943543-bcc4688e7485?q=80&w=1000&auto=format&fit=crop',
-  }
-];
+export const projects: any[] = [];
 
 export interface Review {
   id: string;
@@ -168,7 +90,7 @@ export const services: ServiceData[] = [
       'Crafting high-performance, visually striking websites that captivate users and drive results. By combining fluid typography, responsive layouts, and modern frameworks like React, I deliver seamless digital experiences perfectly tailored to your brand identity.',
     col1Image1: 'https://images.unsplash.com/photo-1507238692062-1981bd697193?q=80&w=1000&auto=format&fit=crop',
     col1Image2: 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?q=80&w=1000&auto=format&fit=crop',
-    col2Image: '/web service.webp',
+    col2Image: 'https://pub-300810ae570e4983a2a928a706ef0133.r2.dev/Portfolio/Assets/web%20service.webp',
   },
   {
     number: '02',
@@ -179,7 +101,7 @@ export const services: ServiceData[] = [
       'Building intuitive and powerful cross-platform mobile applications for iOS and Android. Utilizing modern technologies like Flutter, I focus on pixel-perfect UI, buttery-smooth micro-interactions, and robust state management to ensure a flawless native experience.',
     col1Image1: 'https://images.unsplash.com/photo-1555774698-0b77e0d5fac6?q=80&w=1000&auto=format&fit=crop',
     col1Image2: 'https://images.unsplash.com/photo-1618761714954-0b8cd0026356?q=80&w=1000&auto=format&fit=crop',
-    col2Image: '/flutter service.webp',
+    col2Image: 'https://pub-300810ae570e4983a2a928a706ef0133.r2.dev/Portfolio/Assets/flutter%20service.webp',
   },
   {
     number: '03',
@@ -190,7 +112,7 @@ export const services: ServiceData[] = [
       'Transforming architectural concepts into immersive realities through high-fidelity 3D modeling and rendering. From spatial planning in SketchUp and Revit to photorealistic visualizations in Blender, I bridge the gap between imagination and physical construction.',
     col1Image1: 'https://images.unsplash.com/photo-1503387762-592deb58ef4e?q=80&w=1000&auto=format&fit=crop',
     col1Image2: 'https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?q=80&w=1000&auto=format&fit=crop',
-    col2Image: '/interior service.webp',
+    col2Image: 'https://pub-300810ae570e4983a2a928a706ef0133.r2.dev/Portfolio/Assets/interior%20service.webp',
   },
 ];
 
@@ -243,59 +165,95 @@ export const otherKnowledge = [
 
 export const certifications = [
   {
-    title: 'Full-Stack Web Development',
-    issuer: 'Coursera / Meta',
-    date: '2023',
-    description: 'Comprehensive certification covering front-end and back-end development, responsive design, and database management.',
-    image: 'https://images.unsplash.com/photo-1523240795612-9a054b0db644?q=80&w=800&auto=format&fit=crop'
+    id: '01',
+    title: 'MERN Stack Development',
+    issuer: 'Sigma',
+    date: 'Recent',
+    description: 'Comprehensive certification in MongoDB, Express.js, React, and Node.js stack.',
+    image: 'https://pub-300810ae570e4983a2a928a706ef0133.r2.dev/Portfolio/achievementImage/sigmaMERN%20Stack.webp'
   },
   {
-    title: 'Advanced React Patterns',
-    issuer: 'Frontend Masters',
-    date: '2023',
-    description: 'Deep dive into advanced React concepts, performance optimization, and custom hooks architecture.',
-    image: 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=800&auto=format&fit=crop'
-  },
-  {
-    title: 'Cloud Computing Fundamentals',
-    issuer: 'AWS Training',
-    date: '2022',
-    description: 'Foundational knowledge of cloud concepts, core services, security, architecture, pricing, and support.',
-    image: 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?q=80&w=800&auto=format&fit=crop'
-  },
-  {
-    title: 'UI/UX Design Masterclass',
-    issuer: 'Design+Code',
-    date: '2024',
-    description: 'Advanced techniques in user interface design, user experience research, and prototyping with Figma.',
-    image: 'https://images.unsplash.com/photo-1561070791-2526d30994b5?q=80&w=800&auto=format&fit=crop'
-  },
-  {
-    title: 'Node.js Microservices',
+    id: '02',
+    title: 'PERN Stack Development',
     issuer: 'Udemy',
-    date: '2024',
-    description: 'Building scalable microservices architecture using Node.js, Express, Docker, and Kubernetes.',
-    image: 'https://images.unsplash.com/photo-1550439062-609e1531270e?q=80&w=800&auto=format&fit=crop'
+    date: 'Recent',
+    description: 'Advanced full-stack development using PostgreSQL, Express, React, and Node.js.',
+    image: 'https://pub-300810ae570e4983a2a928a706ef0133.r2.dev/Portfolio/achievementImage/udemy%20PERN%20Stack.webp'
   },
   {
-    title: 'TypeScript for Professionals',
-    issuer: 'Codecademy',
-    date: '2023',
-    description: 'Mastering strong typing in JavaScript applications to build robust, error-free production codebases.',
-    image: 'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?q=80&w=800&auto=format&fit=crop'
+    id: '03',
+    title: 'Nextwave Certificate',
+    issuer: 'Nextwave',
+    date: 'Recent',
+    description: 'Certification of completion for intensive technical training programs.',
+    image: 'https://pub-300810ae570e4983a2a928a706ef0133.r2.dev/Portfolio/achievementImage/Nextwave%20Certificate.webp'
   },
   {
-    title: 'Modern CSS Frameworks',
-    issuer: 'Pluralsight',
-    date: '2022',
-    description: 'Deep understanding of utility-first CSS, Tailwind architecture, and modern CSS-in-JS solutions.',
-    image: 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?q=80&w=800&auto=format&fit=crop'
+    id: '04',
+    title: 'IBM AI Engineering',
+    issuer: 'IBM',
+    date: 'Recent',
+    description: 'Professional certificate in Artificial Intelligence, Machine Learning, and Data Science from IBM.',
+    image: 'https://pub-300810ae570e4983a2a928a706ef0133.r2.dev/Portfolio/achievementImage/IBM%20AI%20Certificate.webp'
   },
   {
-    title: 'Database Architecture',
-    issuer: 'MongoDB University',
-    date: '2021',
-    description: 'Designing scalable NoSQL schemas, performance tuning, and advanced aggregation pipelines.',
-    image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=800&auto=format&fit=crop'
+    id: '05',
+    title: 'Coursera Cybersecurity',
+    issuer: 'Coursera',
+    date: 'Recent',
+    description: 'Foundational certification covering cybersecurity concepts, network security, and risk management.',
+    image: 'https://pub-300810ae570e4983a2a928a706ef0133.r2.dev/Portfolio/achievementImage/Coursera%20cybersecurity.webp'
   },
+  {
+    id: '06',
+    title: 'InternPe Internship',
+    issuer: 'InternPe',
+    date: 'Recent',
+    description: 'Certificate of completion for software development internship program.',
+    image: 'https://pub-300810ae570e4983a2a928a706ef0133.r2.dev/Portfolio/achievementImage/internPeIntersnsip.webp'
+  },
+  {
+    id: '07',
+    title: 'Drone Bootcamp',
+    issuer: 'Bootcamp',
+    date: 'Recent',
+    description: 'Practical training and certification in drone technology, assembly, and flight operations.',
+    image: 'https://pub-300810ae570e4983a2a928a706ef0133.r2.dev/Portfolio/achievementImage/DroneBootcamp.webp'
+  },
+  {
+    id: '08',
+    title: 'Business English Certificate',
+    issuer: 'Language Institute',
+    date: 'Recent',
+    description: 'Certification verifying proficiency in professional and business English communication.',
+    image: 'https://pub-300810ae570e4983a2a928a706ef0133.r2.dev/Portfolio/achievementImage/Business%20Eng%20Certificate.webp'
+  },
+  {
+    id: '09',
+    title: 'OAV Art Certificate',
+    issuer: 'OAV Foundation, Bhubaneswar',
+    date: 'Recent',
+    description: 'Received from the OAV Foundation in Bhubaneswar for excellence in visual arts and creative expression.',
+    image: 'https://pub-300810ae570e4983a2a928a706ef0133.r2.dev/Portfolio/achievementImage/OAV%20Art%20Certificate.webp'
+  },
+  {
+    id: '10',
+    title: 'Chaiti Art Certificate',
+    issuer: 'Chaiti Mahotsav, Rayagada',
+    date: 'Recent',
+    description: 'Secured 2nd position in the district-level art competition at Chaiti, the yearly cultural event of Rayagada district.',
+    image: 'https://pub-300810ae570e4983a2a928a706ef0133.r2.dev/Portfolio/achievementImage/Chaiti%20art%20certificate.webp'
+  }
 ];
+
+export interface ProductData {
+  id: string;
+  title: string;
+  category: string;
+  description: string;
+  image: string;
+  buyUrl?: string;
+  viewUrl?: string;
+}
+
+export const products: any[] = [];

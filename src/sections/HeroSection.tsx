@@ -34,7 +34,7 @@ const HeroSection = () => {
         }));
       };
       
-      img.src = `/myVideoFrame/frame_${frameNumber}_no_bg.png`;
+      img.src = `https://pub-300810ae570e4983a2a928a706ef0133.r2.dev/Portfolio/myVideoFrames/frame_${frameNumber}_no_bg.webp`;
     };
 
     // Phase 1: Load initial frames immediately
@@ -114,7 +114,7 @@ const HeroSection = () => {
   }, [images, frameIndex]);
 
   return (
-    <section ref={containerRef} className="h-[120vh] sm:h-[300vh] relative z-10 bg-[#0C0C0C]">
+    <section id="home" ref={containerRef} className="h-[180vh] sm:h-[300vh] relative z-10 bg-[#0C0C0C]">
       {/* Sticky Viewport Container */}
       <div className="sticky top-0 h-screen flex flex-col pt-20 sm:pt-24 overflow-hidden">
         
@@ -155,15 +155,19 @@ const HeroSection = () => {
         </svg>
 
         {/* Hero Heading (Moved to back, z-0) */}
-        <div className="absolute top-10 sm:top-12 left-0 w-full px-6 md:px-10 z-0 flex flex-col items-center justify-start h-full pt-4 sm:pt-6">
+        <div 
+          className="absolute top-10 sm:top-12 left-0 w-full px-4 sm:px-6 md:px-10 z-0 flex flex-col items-center justify-start h-full pt-8 sm:pt-6"
+          style={{ isolation: 'isolate', transform: 'translateZ(0)', backfaceVisibility: 'hidden' }}
+        >
           <FadeIn delay={0.15} y={40} className="overflow-visible w-full text-center">
             <motion.h1
               animate={{ y: [0, -4, 0] }}
               transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
+              style={{ transform: 'translate3d(0,0,0)', backfaceVisibility: 'hidden', willChange: 'transform' }}
               className="hero-heading font-black uppercase tracking-tight leading-none
                 whitespace-nowrap w-full
                 text-[14vw] sm:text-[15vw] md:text-[16vw] lg:text-[17.5vw]
-                text-[#D7E2EA] drop-shadow-[0_15px_30px_rgba(0,0,0,0.8)]"
+                text-[#D7E2EA] drop-shadow-[0_15px_30px_rgba(0,0,0,0.8)] select-none"
             >
               Hi, i&apos;m muna
             </motion.h1>
@@ -177,7 +181,8 @@ const HeroSection = () => {
                 backdropFilter: 'url(#letter-detach)',
                 WebkitBackdropFilter: 'url(#letter-detach)',
                 maskImage: 'linear-gradient(to right, black 0%, black 20%, transparent 100%)',
-                WebkitMaskImage: 'linear-gradient(to right, black 0%, black 20%, transparent 100%)'
+                WebkitMaskImage: 'linear-gradient(to right, black 0%, black 20%, transparent 100%)',
+                transform: 'translateZ(0)'
               }}
             />
 
@@ -188,7 +193,8 @@ const HeroSection = () => {
                 backdropFilter: 'url(#letter-attach)',
                 WebkitBackdropFilter: 'url(#letter-attach)',
                 maskImage: 'linear-gradient(to left, black 0%, black 20%, transparent 100%)',
-                WebkitMaskImage: 'linear-gradient(to left, black 0%, black 20%, transparent 100%)'
+                WebkitMaskImage: 'linear-gradient(to left, black 0%, black 20%, transparent 100%)',
+                transform: 'translateZ(0)'
               }}
             />
 
@@ -199,14 +205,22 @@ const HeroSection = () => {
               style={{
                 maskImage: 'linear-gradient(to right, rgba(0,0,0,0) 0%, rgba(0,0,0,0.2) 6%, rgba(0,0,0,0.7) 16%, rgba(0,0,0,1) 26%, rgba(0,0,0,1) 74%, rgba(0,0,0,0.7) 84%, rgba(0,0,0,0.2) 94%, rgba(0,0,0,0) 100%)',
                 WebkitMaskImage: 'linear-gradient(to right, rgba(0,0,0,0) 0%, rgba(0,0,0,0.2) 6%, rgba(0,0,0,0.7) 16%, rgba(0,0,0,1) 26%, rgba(0,0,0,1) 74%, rgba(0,0,0,0.7) 84%, rgba(0,0,0,0.2) 94%, rgba(0,0,0,0) 100%)',
-                filter: 'url(#moving-text-fluid)'
+                filter: 'url(#moving-text-fluid)',
+                transform: 'translate3d(0,0,0)',
+                backfaceVisibility: 'hidden',
+                willChange: 'transform'
               }}
-              className="py-8"
+              className="py-0 sm:py-8"
             >
               <motion.div
                 animate={{ x: ["0%", "-50%"] }}
                 transition={{ repeat: Infinity, ease: "linear", duration: 55 }}
-                className="flex w-max whitespace-nowrap font-black uppercase tracking-tight leading-none text-[5.5vw] sm:text-[6.5vw] md:text-[7.5vw] lg:text-[8vw] text-transparent [-webkit-text-stroke:1px_rgba(215,226,234,0.85)] sm:[-webkit-text-stroke:1.5px_rgba(215,226,234,0.85)] select-none"
+                style={{
+                  transform: 'translate3d(0,0,0)',
+                  backfaceVisibility: 'hidden',
+                  willChange: 'transform'
+                }}
+                className="flex w-max whitespace-nowrap font-black uppercase tracking-tight leading-none text-[6vw] sm:text-[6.5vw] md:text-[7.5vw] lg:text-[8vw] text-transparent [-webkit-text-stroke:1px_rgba(215,226,234,0.85)] sm:[-webkit-text-stroke:1.5px_rgba(215,226,234,0.85)] select-none"
               >
                 <span className="shrink-0 pr-8">
                   ai assist developer &amp; designer • full stack developer • app developer • construction &amp; interior designer • 
@@ -233,25 +247,25 @@ const HeroSection = () => {
             ref={canvasRef}
             width={1920}
             height={1080}
-            className={`w-full h-full object-cover object-top sm:object-[center_10%] grayscale transition-opacity duration-500 ${imagesLoaded >= 15 ? 'opacity-100' : 'opacity-0'}`}
+            className={`w-full h-full object-cover object-center sm:object-[center_10%] scale-[0.85] sm:scale-100 grayscale transition-opacity duration-500 ${imagesLoaded >= 15 ? 'opacity-100' : 'opacity-0'}`}
           />
         </div>
 
         {/* Main hero area (Bottom bar) */}
-        <div className="flex-1 relative z-20 flex flex-col justify-end px-6 md:px-10 pb-7 sm:pb-8 md:pb-10 pointer-events-auto">
-          <div className="flex flex-col sm:flex-row justify-between items-center sm:items-end w-full relative gap-4">
-            <FadeIn delay={0.35} y={20} className="self-start sm:self-auto">
+        <div className="flex-1 relative z-20 flex flex-col justify-end px-4 sm:px-6 md:px-10 pb-24 sm:pb-8 md:pb-10 pointer-events-auto">
+          <div className="flex flex-col sm:flex-row justify-between items-center sm:items-end w-full relative gap-6 sm:gap-4">
+            <FadeIn delay={0.35} y={20} className="w-full sm:w-auto">
               <p
-                className="text-[#D7E2EA] font-light uppercase tracking-wide leading-snug
-                  max-w-[160px] sm:max-w-[220px] md:max-w-[260px]"
-                style={{ fontSize: 'clamp(0.75rem, 1.4vw, 1.5rem)' }}
+                className="text-[#D7E2EA] font-bold sm:font-light uppercase tracking-wide leading-snug
+                  max-w-[280px] sm:max-w-[220px] md:max-w-[260px] mx-auto sm:mx-0 text-center sm:text-left
+                  text-[0.9rem] sm:text-[clamp(0.75rem,1.4vw,1.5rem)]"
               >
                 a full-stack developer driven by crafting striking and unforgettable projects
               </p>
             </FadeIn>
 
             {/* Center Floating Action Pill containing Services & View Projects */}
-            <FadeIn delay={0.5} y={20} className="sm:absolute sm:left-[38%] md:sm:left-[40%] sm:-translate-x-1/2 sm:-bottom-3 md:sm:-bottom-4 z-30 pointer-events-auto">
+            <FadeIn delay={0.5} y={20} className="w-full sm:w-auto flex justify-center sm:absolute sm:left-[38%] md:sm:left-[40%] sm:-translate-x-1/2 sm:-bottom-3 md:sm:-bottom-4 z-30 pointer-events-auto mb-12 sm:mb-0">
               <motion.div 
                 animate={{ y: [0, -6, 0] }}
                 transition={{ duration: 3.5, repeat: Infinity, ease: 'easeInOut' }}

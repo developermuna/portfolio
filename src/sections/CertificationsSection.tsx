@@ -1,13 +1,15 @@
 import { useState, useEffect, useCallback } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import FadeIn from '../components/FadeIn';
 
-import { certifications } from '../data/portfolioData';
+import { getCertifications, type Certification } from '../utils/dataStore';
 
 const CertificationsSection = () => {
+  const certifications = getCertifications();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
   const [cardsToShow, setCardsToShow] = useState(3);
+  const [selectedCert, setSelectedCert] = useState<Certification | null>(null);
 
   useEffect(() => {
     const updateCardsToShow = () => {
@@ -48,6 +50,31 @@ const CertificationsSection = () => {
     const timer = setInterval(nextSlide, 3500); // 3.5s delay
     return () => clearInterval(timer);
   }, [nextSlide, isHovered]);
+
+  // Close modal on scroll or Escape key
+  useEffect(() => {
+    if (!selectedCert) return;
+
+    const handleClose = () => {
+      setSelectedCert(null);
+    };
+
+    window.addEventListener('scroll', handleClose, { passive: true });
+    window.addEventListener('wheel', handleClose, { passive: true });
+    window.addEventListener('touchmove', handleClose, { passive: true });
+    
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') handleClose();
+    };
+    window.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      window.removeEventListener('scroll', handleClose);
+      window.removeEventListener('wheel', handleClose);
+      window.removeEventListener('touchmove', handleClose);
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [selectedCert]);
 
   const handleDragEnd = (_e: any, { offset, velocity }: any) => {
     const swipe = offset.x;
@@ -118,10 +145,18 @@ const CertificationsSection = () => {
                   style={{ width: `${100 / certifications.length}%` }}
                 >
                   {/* Card Content */}
-                  <div className="bg-[#D7E2EA]/5 border border-[#D7E2EA]/10 rounded-3xl p-5 sm:p-6 h-full flex flex-col gap-4 hover:bg-[#D7E2EA]/10 transition-colors duration-300 group select-none">
+                  <div 
+                    className="bg-[#D7E2EA]/5 border border-[#D7E2EA]/10 rounded-3xl p-5 sm:p-6 h-full flex flex-col gap-4 hover:bg-[#D7E2EA]/10 transition-colors duration-300 group select-none cursor-pointer"
+                    onClick={() => setSelectedCert(cert)}
+                  >
                     <div className="w-full aspect-video rounded-2xl overflow-hidden mb-2 relative pointer-events-none">
                       <div className="absolute inset-0 bg-[#D7E2EA]/10 mix-blend-overlay z-10 group-hover:opacity-0 transition-opacity duration-500" />
-                      <img src={cert.image} alt={cert.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out" draggable="false" />
+                      <img 
+                        src={cert.image} 
+                        alt={cert.title} 
+                        className={`w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out ${['InternPe Internship', 'PERN Stack Development', 'OAV Art Certificate'].includes(cert.title) ? 'object-top' : 'object-center'}`} 
+                        draggable="false" 
+                      />
                     </div>
                     <div className="flex justify-between items-start gap-4 pointer-events-none">
                       <span className="text-[#D7E2EA]/50 font-medium tracking-widest uppercase text-xs sm:text-sm">
@@ -156,6 +191,61 @@ const CertificationsSection = () => {
           ))}
         </div>
       </div>
+
+      {/* Modal / Popup for Enlarged View */}
+      <AnimatePresence>
+        {selectedCert && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-8 bg-black/80 backdrop-blur-sm cursor-pointer"
+            onClick={() => setSelectedCert(null)}
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0, y: 20 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.9, opacity: 0, y: 20 }}
+              transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+              className="bg-[#111111] border border-[#D7E2EA]/20 rounded-3xl p-4 sm:p-6 max-w-4xl w-full max-h-[90vh] overflow-y-auto cursor-default flex flex-col shadow-2xl relative"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <button
+                className="absolute top-4 right-4 sm:top-6 sm:right-6 w-8 h-8 flex items-center justify-center bg-black/50 hover:bg-black/80 rounded-full text-white transition-colors z-10"
+                onClick={() => setSelectedCert(null)}
+              >
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+              </button>
+              
+              <div className="w-full rounded-2xl overflow-hidden mb-6 bg-black flex items-center justify-center">
+                <img 
+                  src={selectedCert.image} 
+                  alt={selectedCert.title} 
+                  className="w-full h-auto max-h-[60vh] object-contain" 
+                  draggable="false" 
+                />
+              </div>
+              
+              <div className="flex flex-col gap-3">
+                <div className="flex justify-between items-start gap-4">
+                  <span className="text-[#D7E2EA]/50 font-medium tracking-widest uppercase text-sm">
+                    {selectedCert.date}
+                  </span>
+                  <span className="bg-[#D7E2EA]/10 text-[#D7E2EA] px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider">
+                    {selectedCert.issuer}
+                  </span>
+                </div>
+                <h3 className="text-[#D7E2EA] font-bold text-2xl sm:text-3xl uppercase tracking-wide">
+                  {selectedCert.title}
+                </h3>
+                <p className="text-[#D7E2EA]/70 font-light leading-relaxed text-base sm:text-lg">
+                  {selectedCert.description}
+                </p>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </section>
   );
 };

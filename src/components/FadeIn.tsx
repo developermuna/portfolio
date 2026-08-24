@@ -33,6 +33,11 @@ const FadeIn = ({
         duration,
         ease: [0.25, 0.1, 0.25, 1],
       }}
+      style={{
+        willChange: "transform, opacity",
+        transform: "translateZ(0)",
+        backfaceVisibility: "hidden"
+      }}
     >
       {children}
     </MotionComponent>

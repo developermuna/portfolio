@@ -15,15 +15,15 @@ const AboutSection = () => {
     <section
       id="about"
       className="relative w-full bg-transparent text-[#D7E2EA]
-        flex flex-col lg:flex-row items-center justify-center
-        pt-4 pb-16 px-6 sm:px-12 md:px-16 lg:px-20 lg:py-0
+        flex flex-col lg:flex-row items-start justify-start
+        pt-[90px] pb-16 px-6 sm:px-12 md:px-16 lg:px-20 lg:pb-0
         min-h-screen lg:h-screen lg:max-h-screen z-30"
     >
 
-      <div className="w-full max-w-[1400px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 h-full items-center relative">
+      <div className="w-full max-w-[1400px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 h-full items-start relative">
         
         {/* LEFT COLUMN: Typography & Content (7 cols on desktop) */}
-        <div className="flex flex-col gap-6 sm:gap-8 lg:col-span-7 justify-center h-full lg:pr-10 xl:pr-20 relative z-40 pt-10 lg:pt-0">
+        <div className="flex flex-col gap-6 sm:gap-8 lg:col-span-7 justify-start h-auto lg:pr-10 xl:pr-20 relative z-40 pt-4 lg:pt-0">
           
           <FadeIn delay={0.1} y={20}>
             <div className="flex items-center gap-3">

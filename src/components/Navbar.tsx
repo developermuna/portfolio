@@ -4,9 +4,9 @@ import { Menu, X } from 'lucide-react';
 const navLinks = [
   { name: 'About', href: '#about' },
   { name: 'Skills', href: '#skills' },
+  { name: 'Projects', href: '#projects' },
   { name: 'Education', href: '#experience' },
   { name: 'Achievements', href: '#certifications' },
-  { name: 'Projects', href: '#projects' },
   { name: 'Testimonials', href: '#testimonials' }
 ];
 const Navbar = () => {
@@ -23,7 +23,7 @@ const Navbar = () => {
         Services
       </a>
       <a 
-        href="/MunaKousalya%20CV.pdf" 
+        href="https://pub-300810ae570e4983a2a928a706ef0133.r2.dev/Portfolio/Assets/MunaKousalya%20CV.pdf" 
         target="_blank"
         rel="noopener noreferrer"
         className="flex items-center gap-1.5 px-3 py-1.5 sm:px-4 sm:py-2 bg-[#0C0C0C] text-[#D7E2EA] rounded-full font-semibold uppercase tracking-wide text-xs md:text-sm hover:bg-[#0C0C0C]/80 transition-colors whitespace-nowrap"
@@ -48,7 +48,7 @@ const Navbar = () => {
             {/* Logo */}
             <a href="#" className="flex-shrink-0" onClick={() => setIsOpen(false)}>
               <img 
-                src="/logo.png" 
+                src="https://pub-300810ae570e4983a2a928a706ef0133.r2.dev/Portfolio/Assets/logo.png" 
                 alt="Muna Logo" 
                 className="w-10 h-10 sm:w-11 sm:h-11 rounded-full object-cover hover:scale-105 transition-all duration-300 shadow-[0_0_15px_rgba(215,226,234,0.1)] border border-[#D7E2EA]/20 bg-[#0C0C0C]"
               />

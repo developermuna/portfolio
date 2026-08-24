@@ -21,9 +21,9 @@ const WhatsApp = ({ size }: { size: number }) => (
 );
 
 const legalLinks = [
-  { label: 'Privacy Policy', href: '#' },
-  { label: 'Terms & Condition', href: '#' },
-  { label: 'Return Policy', href: '#' },
+  { label: 'Privacy Policy', href: '#privacy' },
+  { label: 'Terms & Condition', href: '#terms' },
+  { label: 'Return Policy', href: '#refund-policy' },
 ];
 
 const socialLinks = [
@@ -81,9 +81,25 @@ const ContactSection = () => {
           
           {/* Brand & Contact Info */}
           <FadeIn delay={0.3} y={20} className="md:col-span-5 flex flex-col gap-4">
-            <h3 className="font-kanit font-bold text-xl sm:text-2xl tracking-tight text-[#D7E2EA] uppercase mb-1">
-              Muna Kousalya
-            </h3>
+            <div className="flex items-center gap-3 mb-1">
+              <img 
+                src="https://pub-300810ae570e4983a2a928a706ef0133.r2.dev/Portfolio/Assets/logo.png" 
+                alt="Logo" 
+                className="w-8 h-8 sm:w-10 sm:h-10 rounded-full object-cover cursor-pointer hover:scale-105 transition-transform"
+                onClick={() => {
+                  window.location.hash = '#home';
+                }}
+                onContextMenu={(e) => {
+                  e.preventDefault();
+                  if (window.confirm('open admin page')) {
+                    window.location.hash = '#admin';
+                  }
+                }}
+              />
+              <h3 className="font-kanit font-bold text-xl sm:text-2xl tracking-tight text-[#D7E2EA] uppercase">
+                Muna Kousalya
+              </h3>
+            </div>
             
             <div className="flex flex-col gap-3">
               <a 
@@ -123,7 +139,7 @@ const ContactSection = () => {
                   <a
                     key={link.label}
                     href={link.href}
-                    className="text-[#D7E2EA]/80 font-medium text-xs sm:text-sm hover:text-[#D7E2EA] transition-colors duration-300 w-max group relative"
+                    className="text-[#D7E2EA]/80 font-medium text-xs sm:text-sm hover:text-[#D7E2EA] transition-colors duration-300 w-max group relative cursor-pointer"
                   >
                     {link.label}
                     <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-[#D7E2EA] transition-all duration-300 group-hover:w-full" />

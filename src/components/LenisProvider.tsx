@@ -14,7 +14,7 @@ const LenisProvider: React.FC<LenisProviderProps> = ({ children }) => {
       gestureOrientation: 'vertical',
       smoothWheel: true,
       wheelMultiplier: 1,
-      touchMultiplier: 2,
+      syncTouch: false,
     });
 
     // Expose lenis globally

@@ -1,11 +1,11 @@
 import { useState, useEffect, lazy, Suspense } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { isAuthenticated } from './utils/dataStore';
 import Navbar from './components/Navbar';
 import HeroSection from './sections/HeroSection';
 import MarqueeSection from './sections/MarqueeSection';
 import LenisProvider from './components/LenisProvider';
 import CustomCursor from './components/CustomCursor';
-import FluidBackground from './components/FluidBackground';
 import ContactMeButton from './components/ContactMeButton';
 import SplashScreen from './components/SplashScreen';
 import CurveTransition from './components/CurveTransition';
@@ -20,20 +20,54 @@ const CertificationsSection = lazy(() => import('./sections/CertificationsSectio
 const TestimonialsSection = lazy(() => import('./sections/TestimonialsSection'));
 const ContactSection = lazy(() => import('./sections/ContactSection'));
 const AllProjectsPage = lazy(() => import('./pages/AllProjectsPage'));
+const AllProductsPage = lazy(() => import('./pages/AllProductsPage'));
+const AdminPage = lazy(() => import('./pages/AdminPage'));
+const AdminLoginPage = lazy(() => import('./pages/AdminLoginPage'));
+const PrivacyPolicyPage = lazy(() => import('./pages/PrivacyPolicyPage'));
+const TermsConditionsPage = lazy(() => import('./pages/TermsConditionsPage'));
+const RefundPolicyPage = lazy(() => import('./pages/RefundPolicyPage'));
 
 const App = () => {
   const [splashComplete, setSplashComplete] = useState(false);
   const [currentHash, setCurrentHash] = useState(window.location.hash);
+  const [isAuth, setIsAuth] = useState(() => isAuthenticated());
 
   useEffect(() => {
-    const onHashChange = () => setCurrentHash(window.location.hash);
+    // Force sign out on page reload
+    import('./utils/dataStore').then(m => {
+      m.logout();
+      setIsAuth(false);
+    });
+
+    const onHashChange = () => {
+      const newHash = window.location.hash;
+      setCurrentHash(newHash);
+      if (!newHash.startsWith('#admin')) {
+        import('./utils/dataStore').then(m => {
+          m.logout();
+          setIsAuth(false);
+        });
+      }
+    };
     window.addEventListener('hashchange', onHashChange);
     return () => window.removeEventListener('hashchange', onHashChange);
   }, []);
 
+  // Handle scrolling to top when switching to a dedicated page
+  useEffect(() => {
+    const isDedicatedPage = ['#privacy', '#terms', '#refund', '#admin', '#all-projects', '#all-products'].some(route => currentHash.startsWith(route));
+    if (isDedicatedPage) {
+      window.scrollTo(0, 0);
+      if ((window as any).lenis) {
+        (window as any).lenis.scrollTo(0, { immediate: true });
+      }
+    }
+  }, [currentHash]);
+
   // Handle scrolling to hash when returning to home page
   useEffect(() => {
-    if (currentHash && !currentHash.startsWith('#all-projects')) {
+    const isDedicatedPage = ['#privacy', '#terms', '#refund', '#admin', '#all-projects', '#all-products'].some(route => currentHash.startsWith(route));
+    if (currentHash && !isDedicatedPage) {
       const id = currentHash.substring(1);
       
       // Since the home page contains lazy-loaded components, the target element 
@@ -73,15 +107,37 @@ const App = () => {
           </filter>
         </svg>
 
+        <div className="fixed inset-0 w-full h-full pointer-events-none z-0">
+          <div className="absolute inset-0 bg-[#0C0C0C]/80 backdrop-blur-[2px]" />
+        </div>
+
         <CurveTransition />
-        <FluidBackground />
         <CustomCursor />
         
-        <Navbar />
-        <ContactMeButton />
+        {splashComplete && (
+          <>
+            <Navbar />
+            <ContactMeButton />
+          </>
+        )}
         
         <AnimatePresence mode="wait">
-          {currentHash.startsWith('#all-projects') ? (
+          {currentHash.startsWith('#admin') ? (
+            <motion.div
+              key="admin"
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 1.05 }}
+              transition={{ duration: 0.4, ease: "easeInOut" }}
+            >
+              <Suspense fallback={<div className="h-screen w-full bg-[#0C0C0C]" />}>
+                {isAuth ? <AdminPage onLogout={() => {
+                  import('./utils/dataStore').then(m => m.logout());
+                  setIsAuth(false);
+                }} /> : <AdminLoginPage onLoginSuccess={() => setIsAuth(true)} />}
+              </Suspense>
+            </motion.div>
+          ) : currentHash.startsWith('#all-projects') ? (
             <motion.div
               key="all-projects"
               initial={{ opacity: 0, scale: 0.95 }}
@@ -91,6 +147,54 @@ const App = () => {
             >
               <Suspense fallback={<div className="h-screen w-full bg-[#0C0C0C]" />}>
                 <AllProjectsPage />
+              </Suspense>
+            </motion.div>
+          ) : currentHash.startsWith('#all-products') ? (
+            <motion.div
+              key="all-products"
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 1.05 }}
+              transition={{ duration: 0.4, ease: "easeInOut" }}
+            >
+              <Suspense fallback={<div className="h-screen w-full bg-[#0C0C0C]" />}>
+                <AllProductsPage />
+              </Suspense>
+            </motion.div>
+          ) : currentHash.startsWith('#privacy') ? (
+            <motion.div
+              key="privacy"
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 1.05 }}
+              transition={{ duration: 0.4, ease: "easeInOut" }}
+            >
+              <Suspense fallback={<div className="h-screen w-full bg-[#0C0C0C]" />}>
+                <PrivacyPolicyPage />
+              </Suspense>
+            </motion.div>
+          ) : currentHash.startsWith('#terms') ? (
+            <motion.div
+              key="terms"
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 1.05 }}
+              transition={{ duration: 0.4, ease: "easeInOut" }}
+            >
+              <Suspense fallback={<div className="h-screen w-full bg-[#0C0C0C]" />}>
+                <TermsConditionsPage />
+              </Suspense>
+            </motion.div>
+          ) : currentHash.startsWith('#refund') ? (
+            <motion.div
+              key="refund"
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 1.05 }}
+              transition={{ duration: 0.4, ease: "easeInOut" }}
+            >
+              <Suspense fallback={<div className="h-screen w-full bg-[#0C0C0C]" />}>
+                <RefundPolicyPage />
               </Suspense>
             </motion.div>
           ) : (
@@ -106,10 +210,10 @@ const App = () => {
               <Suspense fallback={<div className="h-screen w-full bg-[#0C0C0C]" />}>
                 <AboutSection />
                 <SkillsSection />
-                <ExperienceEducationSection />
-                <CertificationsSection />
                 <ProjectsSection />
                 <ServicesSection />
+                <ExperienceEducationSection />
+                <CertificationsSection />
                 <TestimonialsSection />
                 <ContactSection />
               </Suspense>

@@ -4,23 +4,22 @@ import { motion } from 'framer-motion';
 export const CustomCursor = () => {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [isHovering, setIsHovering] = useState(false);
+  const [isTouchDevice, setIsTouchDevice] = useState(false);
 
   useEffect(() => {
-    const updateMousePosition = (e: MouseEvent | TouchEvent) => {
-      if ('touches' in e && e.touches.length > 0) {
-        setMousePosition({ x: e.touches[0].clientX, y: e.touches[0].clientY });
-      } else if ('clientX' in e) {
-        setMousePosition({ x: (e as MouseEvent).clientX, y: (e as MouseEvent).clientY });
-      }
+    const isTouch = window.matchMedia('(pointer: coarse)').matches || 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+    
+    if (isTouch) {
+      setIsTouchDevice(true);
+      return; // Do not attach any event listeners on touch devices!
+    }
+
+    const updateMousePosition = (e: MouseEvent) => {
+      setMousePosition({ x: e.clientX, y: e.clientY });
     };
 
-    const handleMouseOver = (e: MouseEvent | TouchEvent) => {
+    const handleMouseOver = (e: MouseEvent) => {
       let target = e.target as HTMLElement;
-      if ('touches' in e && e.touches.length > 0) {
-        const touch = e.touches[0];
-        const el = document.elementFromPoint(touch.clientX, touch.clientY);
-        if (el) target = el as HTMLElement;
-      }
       
       if (
         target.tagName?.toLowerCase() === 'button' ||
@@ -35,20 +34,16 @@ export const CustomCursor = () => {
       }
     };
 
-    window.addEventListener('mousemove', updateMousePosition);
-    window.addEventListener('mouseover', handleMouseOver);
-    window.addEventListener('touchmove', updateMousePosition, { passive: true });
-    window.addEventListener('touchstart', updateMousePosition, { passive: true });
-    window.addEventListener('touchmove', handleMouseOver, { passive: true });
+    window.addEventListener('mousemove', updateMousePosition, { passive: true });
+    window.addEventListener('mouseover', handleMouseOver, { passive: true });
 
     return () => {
       window.removeEventListener('mousemove', updateMousePosition);
       window.removeEventListener('mouseover', handleMouseOver);
-      window.removeEventListener('touchmove', updateMousePosition);
-      window.removeEventListener('touchstart', updateMousePosition);
-      window.removeEventListener('touchmove', handleMouseOver);
     };
   }, []);
+
+  if (isTouchDevice) return null;
 
   return (
     <motion.div
@@ -59,11 +54,7 @@ export const CustomCursor = () => {
         scale: isHovering ? 0 : 1,
         opacity: isHovering ? 0 : 1,
       }}
-      transition={
-        window.innerWidth < 768 
-          ? { type: 'tween', duration: 0 } 
-          : { type: 'spring', stiffness: 500, damping: 28, mass: 0.5 }
-      }
+      transition={{ type: 'spring', stiffness: 500, damping: 28, mass: 0.5 }}
       style={{ backdropFilter: 'url(#fluid-wave)' }}
     >
       <motion.div 
