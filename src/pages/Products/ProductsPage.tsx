@@ -127,7 +127,7 @@ const AllProductsPage = () => {
 
       {/* Products Grid */}
       <div className="max-w-[1400px] mx-auto mt-8 px-6 sm:px-12 md:px-16 lg:px-24">
-        <motion.div layout className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
+        <motion.div layout className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
           <AnimatePresence mode="popLayout">
             {filteredProducts.map((product) => (
               <motion.div
@@ -137,10 +137,10 @@ const AllProductsPage = () => {
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.9 }}
                 transition={{ duration: 0.4 }}
-                className="flex flex-col group cursor-pointer"
+                className="flex flex-col group cursor-pointer bg-[#111111] p-4 sm:p-5 rounded-[32px] border border-white/5 shadow-xl hover:border-white/10 transition-all duration-300"
               >
                 {/* Image Container */}
-                <div className="w-full aspect-[4/3] rounded-3xl overflow-hidden relative mb-6">
+                <div className="w-full aspect-[4/3] rounded-[24px] overflow-hidden relative mb-5">
                   <div className="absolute inset-0 bg-[#0C0C0C]/30 group-hover:bg-transparent transition-colors duration-500 z-10" />
                   <img 
                     src={product.image} 
