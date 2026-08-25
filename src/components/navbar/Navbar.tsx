@@ -5,8 +5,7 @@ const navLinks = [
   { name: 'About', href: '/#about' },
   { name: 'Skills', href: '/#skills' },
   { name: 'Projects', href: '/#projects' },
-  { name: 'Education', href: '/#experience' },
-  { name: 'Achievements', href: '/#certifications' },
+  { name: 'Products', href: '/products' },
   { name: 'Testimonials', href: '/#testimonials' }
 ];
 const Navbar = () => {

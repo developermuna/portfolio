@@ -39,11 +39,26 @@ const SplashScreen = ({ onComplete }: SplashScreenProps) => {
         setIsHeroLoaded(true);
       }
     };
+
+    // Quick exit if not on home page (e.g. reloading on /products)
+    if (window.location.pathname !== '/') {
+      setProgress(100);
+      setIsHeroLoaded(true);
+      return;
+    }
+
+    // Safety fallback: if images fail to load or cache completes before listener attaches
+    const fallbackTimer = setTimeout(() => {
+      setProgress(100);
+      setIsHeroLoaded(true);
+    }, 4000); // 4 seconds max wait
+
     window.addEventListener('hero-image-loaded', handleHeroLoaded);
 
     return () => {
       clearTimeout(startDelay);
       clearTimeout(minTime);
+      clearTimeout(fallbackTimer);
       window.removeEventListener('hero-image-loaded', handleHeroLoaded);
       document.body.style.overflow = '';
     };

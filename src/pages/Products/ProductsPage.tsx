@@ -1,18 +1,23 @@
 import { useEffect, useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowLeft, ShoppingCart, Eye } from 'lucide-react';
-import { useSupabaseData } from '../../hooks/useSupabaseData';
-
-const categories = [
-  { id: 'all', label: 'All Products' },
-  { id: 'web', label: 'Web Development' },
-  { id: 'app', label: 'App Development' },
-  { id: 'interior', label: 'Interior Design' },
-];
+import { useSupabaseData, type Product } from '../../hooks/useSupabaseData';
+import PaymentModal from '../../components/product/PaymentModal';
 
 const AllProductsPage = () => {
   const { products } = useSupabaseData();
   const [activeCategory, setActiveCategory] = useState('all');
+  
+  const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+
+  const dynamicCategories = useMemo(() => {
+    const uniqueCategories = Array.from(new Set(products.map(p => p.category).filter(Boolean)));
+    return [
+      { id: 'all', label: 'All Products' },
+      ...uniqueCategories.map(cat => ({ id: cat, label: cat }))
+    ];
+  }, [products]);
 
   // Parse URL search params or hash for category parameter and ensure page starts at top
   useEffect(() => {
@@ -26,7 +31,7 @@ const AllProductsPage = () => {
       categoryParam = window.location.hash.split('?category=')[1];
     }
     
-    if (categoryParam && categories.some(c => c.id === categoryParam)) {
+    if (categoryParam) {
       setActiveCategory(categoryParam);
     }
   }, []);
@@ -36,6 +41,23 @@ const AllProductsPage = () => {
       ? products 
       : products.filter(p => p.category === activeCategory);
   }, [activeCategory, products]);
+
+  const handleBuyNow = (e: React.MouseEvent, product: Product) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setSelectedProduct(product);
+    setIsPaymentModalOpen(true);
+  };
+
+  const handleView = (e: React.MouseEvent, product: Product) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (product.viewUrl) {
+      window.open(product.viewUrl, '_blank');
+    } else {
+      alert('View URL not available for this product.');
+    }
+  };
 
   return (
     <div className="min-h-screen bg-[#0C0C0C] text-[#D7E2EA] font-kanit pb-20 relative z-50">
@@ -78,7 +100,7 @@ const AllProductsPage = () => {
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4 w-full xl:w-auto mt-4 xl:mt-0">
             {/* Filter Tabs */}
             <div className="flex gap-2 overflow-x-auto pb-1 [&::-webkit-scrollbar]:hidden max-w-full">
-              {categories.map((cat) => (
+              {dynamicCategories.map((cat) => (
                 <button
                   key={cat.id}
                   onClick={() => setActiveCategory(cat.id)}
@@ -126,13 +148,18 @@ const AllProductsPage = () => {
                     alt={product.title} 
                     className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700"
                   />
+                  {product.Price && (
+                    <div className="absolute bottom-3 right-3 z-20 font-black text-amber-400 text-lg sm:text-xl drop-shadow-md">
+                      ₹{product.Price.toLocaleString()}
+                    </div>
+                  )}
                 </div>
 
                 {/* Content */}
-                <div className="flex flex-col">
+                <div className="flex flex-col flex-grow">
                   <div className="flex items-center gap-3 mb-2">
                     <span className="text-[9px] uppercase tracking-widest font-bold text-gray-400 px-2 py-0.5 rounded-sm border border-white/10">
-                      {categories.find(c => c.id === product.category)?.label || product.category}
+                      {product.category}
                     </span>
                   </div>
                   <h3 className="text-lg sm:text-xl font-semibold uppercase tracking-wide mb-2 text-white group-hover:text-blue-400 transition-colors">
@@ -143,14 +170,10 @@ const AllProductsPage = () => {
                   </p>
                   
                   {/* Action Buttons */}
-                  <div className="flex flex-row gap-3 mt-auto">
+                  <div className="flex flex-row gap-3 mt-auto pt-2">
                     <button
                       type="button"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        alert('Checkout functionality coming soon!');
-                      }}
+                      onClick={(e) => handleBuyNow(e, product)}
                       className="flex-1 flex items-center justify-center gap-1.5 rounded-full bg-white text-black
                         font-bold uppercase tracking-widest px-3 py-2 text-[10px] sm:text-xs
                         cursor-pointer transition-all duration-300 hover:bg-gray-200 hover:scale-[1.02]"
@@ -161,11 +184,7 @@ const AllProductsPage = () => {
                     
                     <button
                       type="button"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        alert('Product details view coming soon!');
-                      }}
+                      onClick={(e) => handleView(e, product)}
                       className="flex-1 flex items-center justify-center gap-1.5 rounded-full border border-gray-500 text-gray-300
                         font-bold uppercase tracking-widest px-3 py-2 text-[10px] sm:text-xs
                         cursor-pointer transition-all duration-300
@@ -181,6 +200,12 @@ const AllProductsPage = () => {
           </AnimatePresence>
         </motion.div>
       </div>
+
+      <PaymentModal 
+        isOpen={isPaymentModalOpen}
+        onClose={() => setIsPaymentModalOpen(false)}
+        product={selectedProduct}
+      />
     </div>
   );
 };

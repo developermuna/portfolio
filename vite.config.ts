@@ -44,7 +44,23 @@ export default defineConfig(({ mode }) => {
           ]
         },
         workbox: {
-          maximumFileSizeToCacheInBytes: 5000000 // Increase cache size limit to 5MB for assets
+          maximumFileSizeToCacheInBytes: 5000000, // Increase cache size limit to 5MB for assets
+          runtimeCaching: [
+            {
+              urlPattern: /^https:\/\/pub-300810ae570e4983a2a928a706ef0133\.r2\.dev\/.*/i,
+              handler: 'CacheFirst',
+              options: {
+                cacheName: 'r2-images-cache',
+                expiration: {
+                  maxEntries: 200,
+                  maxAgeSeconds: 60 * 60 * 24 * 30 // 30 days
+                },
+                cacheableResponse: {
+                  statuses: [0, 200]
+                }
+              }
+            }
+          ]
         }
       })
     ],

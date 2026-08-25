@@ -3,16 +3,17 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowLeft } from 'lucide-react';
 import { useSupabaseData } from '../../hooks/useSupabaseData';
 
-const categories = [
-  { id: 'all', label: 'All Projects' },
-  { id: 'web', label: 'Web Design' },
-  { id: 'app', label: 'App Design' },
-  { id: 'interior', label: 'Interior Design' },
-];
-
 const AllProjectsPage = () => {
   const { projects } = useSupabaseData();
   const [activeCategory, setActiveCategory] = useState('all');
+
+  const dynamicCategories = useMemo(() => {
+    const uniqueCategories = Array.from(new Set(projects.map(p => p.category).filter(Boolean)));
+    return [
+      { id: 'all', label: 'All Projects' },
+      ...uniqueCategories.map(cat => ({ id: cat, label: cat }))
+    ];
+  }, [projects]);
 
   // Parse URL search params or hash for category parameter and ensure page starts at top
   useEffect(() => {
@@ -26,7 +27,7 @@ const AllProjectsPage = () => {
       categoryParam = window.location.hash.split('?category=')[1];
     }
     
-    if (categoryParam && categories.some(c => c.id === categoryParam)) {
+    if (categoryParam) {
       setActiveCategory(categoryParam);
     }
   }, []);
@@ -78,7 +79,7 @@ const AllProjectsPage = () => {
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4 w-full xl:w-auto mt-4 xl:mt-0">
             {/* Filter Tabs */}
             <div className="flex gap-2 overflow-x-auto pb-1 [&::-webkit-scrollbar]:hidden max-w-full">
-              {categories.map((cat) => (
+              {dynamicCategories.map((cat) => (
                 <button
                   key={cat.id}
                   onClick={() => setActiveCategory(cat.id)}

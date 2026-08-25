@@ -18,6 +18,7 @@ export interface Product {
   image: string;
   buyUrl?: string;
   viewUrl?: string;
+  Price?: number;
 }
 
 export interface Certification {
