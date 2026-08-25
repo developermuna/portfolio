@@ -124,32 +124,44 @@ export default function CurveTransition() {
                 }
               }, 50);
             } else {
-              // Legacy hash navigation
-              window.location.hash = targetHash === '#home' ? '' : targetHash;
-              setTimeout(() => {
-                try {
-                  const isDedicatedPage = ['#privacy', '#terms', '#refund', '#admin', '#all-projects', '#all-products'].some(route => targetHash.startsWith(route));
-                  if (isDedicatedPage || targetHash === '#home') {
-                    window.scrollTo(0, 0);
-                    if ((window as any).lenis) {
-                      (window as any).lenis.scrollTo(0, { immediate: true });
-                    }
-                    return;
+              // If user is on a subpage (e.g. /privacy, /terms, /projects), navigate back to root
+              if (window.location.pathname !== '/') {
+                const cleanTarget = targetHash === '#home' ? '/' : `/${targetHash}`;
+                navigateRef.current(cleanTarget);
+                setTimeout(() => {
+                  window.scrollTo(0, 0);
+                  if ((window as any).lenis) {
+                    (window as any).lenis.scrollTo(0, { immediate: true });
                   }
+                }, 50);
+              } else {
+                // Legacy hash navigation on the home page
+                window.location.hash = targetHash === '#home' ? '' : targetHash;
+                setTimeout(() => {
+                  try {
+                    const isDedicatedPage = ['#privacy', '#terms', '#refund', '#admin', '#all-projects', '#all-products'].some(route => targetHash.startsWith(route));
+                    if (isDedicatedPage || targetHash === '#home') {
+                      window.scrollTo(0, 0);
+                      if ((window as any).lenis) {
+                        (window as any).lenis.scrollTo(0, { immediate: true });
+                      }
+                      return;
+                    }
 
-                  const cleanHash = targetHash.split('?')[0];
-                  const newEl = document.querySelector(cleanHash);
-                  if (newEl) {
-                    if ((window as any).lenis) {
-                      (window as any).lenis.scrollTo(newEl, { immediate: true, offset: 0 });
-                    } else {
-                      newEl.scrollIntoView();
+                    const cleanHash = targetHash.split('?')[0];
+                    const newEl = document.querySelector(cleanHash);
+                    if (newEl) {
+                      if ((window as any).lenis) {
+                        (window as any).lenis.scrollTo(newEl, { immediate: true, offset: 0 });
+                      } else {
+                        newEl.scrollIntoView();
+                      }
                     }
+                  } catch (err) {
+                    console.error('CurveTransition navigation error:', err);
                   }
-                } catch (err) {
-                  console.error('CurveTransition navigation error:', err);
-                }
-              }, 30); // 30ms is just enough for React to process the hash change
+                }, 30);
+              }
             }
           }
       }, "-=0.2") // Trigger scroll/hash slightly before fully covered

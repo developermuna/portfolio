@@ -14,17 +14,20 @@ const AllProjectsPage = () => {
   const { projects } = useSupabaseData();
   const [activeCategory, setActiveCategory] = useState('all');
 
-  // Parse URL hash for category parameter and ensure page starts at top
+  // Parse URL search params or hash for category parameter and ensure page starts at top
   useEffect(() => {
     window.scrollTo(0, 0);
     
-    // The hash might look like "#all-projects?category=app"
-    const hash = window.location.hash;
-    if (hash.includes('?category=')) {
-      const categoryParam = hash.split('?category=')[1];
-      if (categories.some(c => c.id === categoryParam)) {
-        setActiveCategory(categoryParam);
-      }
+    // Check search query (e.g. "?category=app") or hash (e.g. "#all-projects?category=app")
+    const searchParams = new URLSearchParams(window.location.search);
+    let categoryParam = searchParams.get('category');
+    
+    if (!categoryParam && window.location.hash.includes('?category=')) {
+      categoryParam = window.location.hash.split('?category=')[1];
+    }
+    
+    if (categoryParam && categories.some(c => c.id === categoryParam)) {
+      setActiveCategory(categoryParam);
     }
   }, []);
 
@@ -91,7 +94,7 @@ const AllProjectsPage = () => {
             </div>
             
             <a 
-              href="#projects" 
+              href="/#projects" 
               className="flex items-center justify-center gap-2 text-[#0C0C0C] bg-[#D7E2EA] hover:bg-white px-4 py-2 rounded-full transition-colors group flex-shrink-0 w-max text-xs sm:text-sm"
             >
               <ArrowLeft size={16} className="transform group-hover:-translate-x-1 transition-transform" />

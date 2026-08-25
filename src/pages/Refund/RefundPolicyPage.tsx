@@ -30,7 +30,7 @@ const RefundPolicyPage = () => {
           </motion.div>
           
           <a 
-            href="#home" 
+            href="/" 
             className="flex items-center justify-center gap-2 text-[#0C0C0C] bg-[#D7E2EA] hover:bg-white px-5 py-2.5 rounded-full transition-colors group w-max text-xs sm:text-sm shadow-xl"
           >
             <ArrowLeft size={16} className="transform group-hover:-translate-x-1 transition-transform" />
