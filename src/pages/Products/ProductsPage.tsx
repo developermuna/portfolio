@@ -2,14 +2,10 @@ import { useEffect, useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowLeft, ShoppingCart, Eye } from 'lucide-react';
 import { useSupabaseData, type Product } from '../../hooks/useSupabaseData';
-import PaymentModal from '../../components/product/PaymentModal';
 
 const AllProductsPage = () => {
   const { products } = useSupabaseData();
   const [activeCategory, setActiveCategory] = useState('all');
-  
-  const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
-  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
 
   const dynamicCategories = useMemo(() => {
     const uniqueCategories = Array.from(new Set(products.map(p => p.category).filter(Boolean)));
@@ -45,8 +41,11 @@ const AllProductsPage = () => {
   const handleBuyNow = (e: React.MouseEvent, product: Product) => {
     e.preventDefault();
     e.stopPropagation();
-    setSelectedProduct(product);
-    setIsPaymentModalOpen(true);
+    if (product.buyUrl) {
+      window.open(product.buyUrl, '_blank');
+    } else {
+      alert('Buy URL not available for this product.');
+    }
   };
 
   const handleView = (e: React.MouseEvent, product: Product) => {
@@ -200,12 +199,6 @@ const AllProductsPage = () => {
           </AnimatePresence>
         </motion.div>
       </div>
-
-      <PaymentModal 
-        isOpen={isPaymentModalOpen}
-        onClose={() => setIsPaymentModalOpen(false)}
-        product={selectedProduct}
-      />
     </div>
   );
 };
