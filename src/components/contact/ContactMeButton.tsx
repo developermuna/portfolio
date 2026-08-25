@@ -11,7 +11,11 @@ const ContactMeButton = () => {
     <>
       <motion.button
         type="button"
-        onClick={() => setIsModalOpen(true)}
+        onClick={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          setIsModalOpen(true);
+        }}
         aria-label="Open contact form"
         className="fixed bottom-6 right-6 md:bottom-10 md:right-10 z-[100000] group cursor-pointer"
         // Floating animation continuously going up and down

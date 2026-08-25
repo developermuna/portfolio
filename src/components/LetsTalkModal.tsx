@@ -68,35 +68,26 @@ export default function LetsTalkModal({ isOpen, onClose, defaultMessage }: LetsT
     return () => clearInterval(timer);
   }, [cooldown]);
 
-  // Close modal automatically if the user clicks any link or button outside the modal
+  // Close modal on Escape key or navigation
   useEffect(() => {
     if (!isOpen) return;
-    
-    const handleGlobalClick = (e: MouseEvent) => {
-      const target = e.target as HTMLElement;
-      
-      // If it's a click on the backdrop, the backdrop's onClick will handle it
-      if (target.classList.contains('modal-backdrop')) return;
-      
-      // Check if they clicked a button or link
-      const clickedInteractive = target.closest('a, button');
-      const isInsideModal = target.closest('.modal-container');
-      
-      if (clickedInteractive && !isInsideModal) {
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
         onClose();
       }
     };
 
-    // Use capture phase to ensure it runs before React event delegation
-    window.addEventListener('click', handleGlobalClick, { capture: true });
-    
-    // Fallback: also listen to hashchange just in case
-    const handleHashChange = () => onClose();
-    window.addEventListener('hashchange', handleHashChange);
-    
+    const handleNavigation = () => onClose();
+
+    window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('hashchange', handleNavigation);
+    window.addEventListener('popstate', handleNavigation);
+
     return () => {
-      window.removeEventListener('click', handleGlobalClick, { capture: true });
-      window.removeEventListener('hashchange', handleHashChange);
+      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('hashchange', handleNavigation);
+      window.removeEventListener('popstate', handleNavigation);
     };
   }, [isOpen, onClose]);
 
@@ -162,7 +153,7 @@ export default function LetsTalkModal({ isOpen, onClose, defaultMessage }: LetsT
   return (
     <AnimatePresence>
       {isOpen && (
-        <div className="fixed inset-0 z-[99999] flex items-center justify-center px-4">
+        <div className="fixed inset-0 z-[1000000] flex items-center justify-center px-4">
           {/* Backdrop */}
           <motion.div
             initial={{ opacity: 0 }}
