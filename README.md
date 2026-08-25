@@ -112,6 +112,61 @@ The portfolio is pre-configured and tested for 1-click Vercel deployment:
 
 ---
 
+## ✉️ EmailJS Contact Form
+
+The portfolio contact form uses EmailJS to send visitor messages directly to the configured inbox without needing an intermediary backend server.
+
+### Required Environment Variables
+
+Add the following to your `.env` (or hosting environment settings such as Vercel / Hostinger):
+
+```env
+VITE_EMAILJS_SERVICE_ID=your_emailjs_service_id
+VITE_EMAILJS_TEMPLATE_ID=your_emailjs_template_id
+VITE_EMAILJS_PUBLIC_KEY=your_emailjs_public_key
+```
+
+### EmailJS Dashboard Configuration
+
+1. **Create an Email Service**:
+   - In your [EmailJS Dashboard](https://dashboard.emailjs.com/), add a new service (e.g. Gmail, Outlook, or Custom SMTP).
+   - Copy the **Service ID** into `VITE_EMAILJS_SERVICE_ID`.
+2. **Create the Contact Template**:
+   - Create a new template and set the template content:
+     ```text
+     New Portfolio Contact Message
+
+     Date: {{date}}
+     Name: {{user_name}}
+     Email: {{user_email}}
+
+     Message:
+     {{message}}
+     ```
+   - Set the template **To Email** to your recipient address (e.g., `blacksdevil2004@gmail.com`).
+   - Set the template **Reply-To** to `{{user_email}}` so you can reply directly to the sender.
+   - Copy the **Template ID** into `VITE_EMAILJS_TEMPLATE_ID`.
+3. **Public Key & Security Settings**:
+   - Find your **Public Key** under Account > API Keys and copy it into `VITE_EMAILJS_PUBLIC_KEY`.
+   - **Allowed Domains**: Under Account > Security, restrict allowed requests to your production domain:
+     - `https://munakousalya.online`
+     - `https://www.munakousalya.online`
+   - **Rate Limiting & CAPTCHA**: Under EmailJS Security settings, enable rate limiting (e.g., max submissions per IP) and optionally enable Google reCAPTCHA v2 if spam attacks occur.
+
+### Built-in Defense-in-Depth & Anti-Spam Security
+
+The contact form implements multiple security and anti-abuse layers:
+
+- **Client-side input validation**: Length limits, email RFC regex validation, whitespace-only rejection.
+- **Honeypot field**: Hidden `website` input traps automated bots; bot submissions are dropped silently without consuming EmailJS quota.
+- **Submission cooldown**: 30-second client-side throttle to prevent rapid repeated submissions.
+- **Duplicate submission prevention**: Submit button is disabled and indicates `Sending...` while the request is in flight.
+- **Fixed recipient**: Recipient is locked in the EmailJS dashboard/template; visitors cannot alter recipient or relay spam.
+- **XSS protection**: Plain-text variables are transmitted to EmailJS; no `dangerouslySetInnerHTML` is used.
+- **No private secrets**: Only the browser-safe public key is used in frontend code.
+
+---
+
 ## 🛠️ Development Scripts
 
 - `npm run dev` — Start the local Vite development server with hot module replacement (HMR).
