@@ -278,7 +278,7 @@ const HeroSection = () => {
                 className="flex items-center p-1 sm:p-1.5 rounded-full bg-[#0C0C0C]/80 backdrop-blur-xl border border-white shadow-[0_10px_30px_rgba(0,0,0,0.6)] group"
               >
                 <a
-                  href="/#services"
+                  href="/services"
                   className="px-5 sm:px-6 py-2 sm:py-2.5 rounded-full bg-white text-[#0C0C0C] font-semibold tracking-wide uppercase text-xs sm:text-sm hover:scale-105 transition-all duration-300 whitespace-nowrap shadow-md"
                 >
                   Services

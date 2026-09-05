@@ -115,7 +115,7 @@ const AllProductsPage = () => {
             </div>
             
             <a 
-              href="/#services" 
+              href="/services" 
               className="flex items-center justify-center gap-2 text-[#0C0C0C] bg-[#D7E2EA] hover:bg-white px-4 py-2 rounded-full transition-colors group flex-shrink-0 w-max text-xs sm:text-sm"
             >
               <ArrowLeft size={16} className="transform group-hover:-translate-x-1 transition-transform" />

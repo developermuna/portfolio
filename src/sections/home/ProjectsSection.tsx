@@ -37,9 +37,22 @@ const HorizontalProjectCard = ({ project }: { project: Project }) => {
     y.set(0);
   };
 
+  const handleCardClick = () => {
+    if (typeof window !== 'undefined' && window.innerWidth < 768) {
+      if (project.url) {
+        window.open(project.url, '_blank', 'noopener,noreferrer');
+      } else {
+        alert('Visit Site link is not available for this project.');
+      }
+    }
+  };
+
   return (
     <div className="w-[75vw] sm:w-[45vw] md:w-[32vw] lg:w-[24vw] flex-shrink-0 h-full flex flex-col justify-center px-3 sm:px-4">
-      <div className="flex flex-col border border-[#D7E2EA]/10 rounded-3xl p-4 sm:p-5 h-[48vh] sm:h-[50vh] bg-[#111111]/80 hover:bg-[#1A1A1A] transition-colors duration-300 perspective-[1000px] shadow-2xl relative overflow-hidden group/card">
+      <div 
+        onClick={handleCardClick}
+        className="flex flex-col border border-[#D7E2EA]/10 rounded-3xl p-4 sm:p-5 h-[42vh] sm:h-[50vh] bg-[#111111]/80 hover:bg-[#1A1A1A] transition-colors duration-300 perspective-[1000px] shadow-2xl relative overflow-hidden group/card cursor-pointer md:cursor-default"
+      >
         
         {/* Subtle gradient glow inside card */}
         <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover/card:opacity-100 transition-opacity duration-500 pointer-events-none" />
@@ -50,7 +63,7 @@ const HorizontalProjectCard = ({ project }: { project: Project }) => {
           onMouseMove={handleMouseMove}
           onMouseLeave={handleMouseLeave}
           style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
-          className="w-full aspect-video rounded-2xl overflow-hidden mb-4 relative group flex-shrink-0 cursor-pointer shadow-lg"
+          className="w-full aspect-video rounded-2xl overflow-hidden mb-4 relative group flex-shrink-0 shadow-lg"
         >
           <div className="absolute inset-0 bg-[#0C0C0C]/10 group-hover:bg-transparent transition-colors duration-300 z-10" />
           <img 
@@ -82,14 +95,14 @@ const HorizontalProjectCard = ({ project }: { project: Project }) => {
               {project.name}
             </h3>
             <p
-              className="font-light leading-relaxed text-[#D7E2EA]/60 line-clamp-3 text-base sm:text-lg"
+              className="font-light leading-relaxed text-[#D7E2EA]/60 line-clamp-3 text-sm sm:text-base md:text-lg"
             >
               {project.description}
             </p>
           </div>
 
-          {/* Action Button */}
-          <div className="mt-4 pt-4 border-t border-[#D7E2EA]/10">
+          {/* Action Button - Hidden on mobile view, visible on tablet/desktop */}
+          <div className="hidden md:block mt-4 pt-4 border-t border-[#D7E2EA]/10">
             <a
               href={project.url || '#'}
               target={project.url ? "_blank" : "_self"}

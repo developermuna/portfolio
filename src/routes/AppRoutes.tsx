@@ -7,6 +7,8 @@ const ProductsPage = lazy(() => import('../pages/Products/ProductsPage'));
 const PrivacyPolicyPage = lazy(() => import('../pages/Privacy/PrivacyPolicyPage'));
 const TermsConditionsPage = lazy(() => import('../pages/Terms/TermsConditionsPage'));
 const RefundPolicyPage = lazy(() => import('../pages/Refund/RefundPolicyPage'));
+const ServicesPage = lazy(() => import('../pages/Services/ServicesPage'));
+const InteriorComingSoonPage = lazy(() => import('../pages/Interior/InteriorComingSoonPage'));
 // Adding a simple contact page component that just scrolls to contact section on home, or we can just render HomePage and rely on hash
 // Since the prompt wants /services, /projects, /products, /contact as distinct routes if possible.
 
@@ -44,9 +46,10 @@ const AppRoutes = () => {
           <Route path="/projects" element={<ProjectsPage />} />
           <Route path="/products" element={<ProductsPage />} />
           
-          {/* Legacy hash support for Contact/Services could just render Home */}
+          {/* Dedicated Services Page */}
+          <Route path="/services" element={<ServicesPage />} />
+          <Route path="/interior" element={<InteriorComingSoonPage />} />
           <Route path="/contact" element={<HomePage />} />
-          <Route path="/services" element={<HomePage />} />
 
           <Route path="/privacy" element={<PrivacyPolicyPage />} />
           <Route path="/terms" element={<TermsConditionsPage />} />

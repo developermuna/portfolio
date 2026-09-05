@@ -15,7 +15,7 @@ const Navbar = () => {
   const ActionPill = ({ className = "" }: { className?: string }) => (
     <div className={`flex items-center bg-[#D7E2EA] p-1 rounded-full shadow-[0_0_15px_rgba(215,226,234,0.2)] hover:scale-105 transition-transform duration-300 ${className}`}>
       <a 
-        href="/#services"
+        href="/services"
         onClick={() => setIsOpen(false)}
         className="flex items-center justify-center pl-3 pr-2 sm:pl-5 sm:pr-3 py-1.5 text-[#0C0C0C] font-bold uppercase tracking-wide text-xs md:text-sm whitespace-nowrap"
       >

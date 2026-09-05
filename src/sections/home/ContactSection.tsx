@@ -195,12 +195,12 @@ const ContactSection = () => {
 
           {/* App Install Button */}
           {deferredPrompt && (
-            <FadeIn delay={0.55} y={20} className="w-full mt-10 sm:mt-16 flex justify-center pb-4">
+            <FadeIn delay={0.55} y={20} className="w-full mt-6 sm:mt-8 flex justify-center pb-2">
               <button 
                 onClick={handleInstallClick}
-                className="flex items-center gap-2 bg-[#D7E2EA] text-[#0C0C0C] px-6 py-3 rounded-full font-bold uppercase tracking-widest text-sm hover:scale-105 transition-transform duration-300 shadow-xl"
+                className="flex items-center gap-1.5 bg-[#D7E2EA] text-[#0C0C0C] px-3.5 py-1.5 rounded-full font-semibold uppercase tracking-wider text-xs hover:scale-105 transition-transform duration-300 shadow-md"
               >
-                <Download size={18} />
+                <Download size={13} />
                 Install App
               </button>
             </FadeIn>
