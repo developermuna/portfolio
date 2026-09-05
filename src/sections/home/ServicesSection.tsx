@@ -1,24 +1,30 @@
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { motion, useScroll, useTransform, type MotionValue } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import FadeIn from '../../components/common/FadeIn';
-import { type ServiceData, services } from '../../data/portfolioData';
+import { type ServiceData, services } from '../../data/services';
 import LetsTalkModal from '../../components/LetsTalkModal';
 import { ArrowRight, MessageCircle, FolderGit2, ExternalLink } from 'lucide-react';
 
 const STACK_OFFSET = 18;
+
+interface ServiceCardProps {
+  service: ServiceData & {
+    badge?: string;
+    actionType?: 'page' | 'external';
+    targetUrl?: string;
+  };
+  index: number;
+  totalCards: number;
+  progress: MotionValue<number>;
+}
 
 const ServiceCard = ({
   service,
   index,
   totalCards,
   progress,
-}: {
-  service: ServiceData;
-  index: number;
-  totalCards: number;
-  progress: MotionValue<number>;
-}) => {
+}: ServiceCardProps) => {
   const navigate = useNavigate();
   const [isTalkModalOpen, setIsTalkModalOpen] = useState(false);
 
@@ -29,19 +35,20 @@ const ServiceCard = ({
   const slideStart = Math.max(0, (index - 1) * segmentSize);
   const slideEnd = Math.min(1, slideStart + segmentSize * 0.7);
 
-  // Y: card 0 starts at 0, while subsequent cards slide in from 1200px below
-  const ySlide = useTransform(progress, [slideStart, slideEnd], [1200, 0]);
-  const y = index === 0 ? 0 : ySlide;
+  // Y: card 0 stays at 0, while subsequent cards slide in from 1200px below
+  const yInput = index === 0 ? [0, 1] : [slideStart, Math.max(slideStart + 0.01, slideEnd)];
+  const yOutput = index === 0 ? [0, 0] : [1200, 0];
+  const y = useTransform(progress, yInput, yOutput);
 
-  // Scale: shrink slightly when subsequent cards stack on top
+  // Scale: shrink slightly when subsequent cards stack on top (strictly monotonic ranges!)
   const targetScale = 1 - (totalCards - 1 - index) * 0.04;
-  const scaleStart = index === 0 ? 0 : Math.max(0, (index - 1) * segmentSize);
-  const scaleEnd = Math.min(scaleStart + segmentSize * 0.5, 1);
-  const scale = useTransform(
-    progress,
-    [0, scaleStart, scaleEnd, 1],
-    [1, 1, targetScale, targetScale]
-  );
+  const scaleInput = index === 0
+    ? [0, 0.7, 1]
+    : [0, Math.max(0.01, slideStart), Math.min(0.99, slideEnd), 1];
+  const scaleOutput = index === 0
+    ? [1, targetScale, targetScale]
+    : [1, 1, targetScale, targetScale];
+  const scale = useTransform(progress, scaleInput, scaleOutput);
 
   const handlePrimaryAction = () => {
     if (service.actionType === 'external' && service.targetUrl) {
@@ -67,7 +74,7 @@ const ServiceCard = ({
           zIndex: index + 1,
           boxShadow: '0 25px 70px -15px rgba(0,0,0,0.22)',
           willChange: 'transform',
-        }}
+        } as any}
       >
         {/* Top row */}
         <div className="flex items-center justify-between gap-4 sm:gap-6 md:gap-8 mb-3 sm:mb-5 md:mb-6 flex-shrink-0">
@@ -105,6 +112,7 @@ const ServiceCard = ({
 
           {/* Quick interactive action indicator */}
           <button
+            type="button"
             onClick={handlePrimaryAction}
             className="hidden lg:flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-[#0C0C0C]/5 hover:bg-[#0C0C0C] text-[#0C0C0C] hover:text-white transition-all duration-300 text-xs font-bold uppercase tracking-wider flex-shrink-0 group"
           >
@@ -137,6 +145,7 @@ const ServiceCard = ({
               </a>
             ) : (
               <button
+                type="button"
                 onClick={() => navigate('/services')}
                 className="relative w-full h-[44px] sm:h-auto sm:flex-1 min-h-[44px] rounded-[18px] sm:rounded-[28px] md:rounded-[32px] bg-[#0C0C0C] flex flex-row items-center justify-center gap-2 sm:gap-3 group transition-all duration-300 hover:bg-[#1C1C1F] border border-[#0C0C0C]/10 overflow-hidden px-4 shadow-sm"
               >
@@ -162,11 +171,12 @@ const ServiceCard = ({
 
             {/* Let's Talk Button */}
             <button
+              type="button"
               onClick={() => setIsTalkModalOpen(true)}
               className="relative w-full h-[42px] sm:h-auto sm:flex-1 min-h-[42px] rounded-[18px] sm:rounded-[28px] md:rounded-[32px] bg-[#F2F4F7] hover:bg-[#E5E8EB] flex flex-row items-center justify-center gap-2 sm:gap-3 group transition-all duration-300 border border-[#0C0C0C]/10 overflow-hidden px-4 shadow-sm"
             >
               <span className="text-[#0C0C0C] font-extrabold uppercase tracking-widest whitespace-nowrap text-xs sm:text-sm md:text-base">
-                Let's Talk
+                {"Let's Talk"}
               </span>
               <MessageCircle className="w-4 h-4 sm:w-5 sm:h-5 text-[#0C0C0C] group-hover:scale-110 transition-transform duration-300" strokeWidth={2.2} />
             </button>
@@ -208,9 +218,17 @@ const ServiceCard = ({
 
 const ServicesSection = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
-  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const measure = () => setIsMobile(window.innerWidth < 768);
+    measure();
+    window.addEventListener('resize', measure);
+    return () => window.removeEventListener('resize', measure);
+  }, []);
+
   const { scrollYProgress } = useScroll({
-    target: sectionRef,
+    target: sectionRef as any,
     offset: ['start start', 'end end'],
   });
 
