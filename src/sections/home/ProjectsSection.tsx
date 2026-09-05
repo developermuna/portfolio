@@ -3,6 +3,7 @@ import { motion, useSpring, useTransform, useMotionValue } from 'framer-motion';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import FadeIn from '../../components/common/FadeIn';
+import { ArrowRight } from 'lucide-react';
 
 import { useSupabaseData, type Project } from '../../hooks/useSupabaseData';
 
@@ -216,22 +217,27 @@ const ProjectsSection = () => {
             </div>
           ))}
 
-          {/* Final "Show More" Card */}
-          <div className={`w-[75vw] sm:w-[45vw] md:w-[32vw] lg:w-[24vw] flex-shrink-0 flex flex-col sm:h-full items-center sm:justify-center px-3 sm:px-4 ${isMobile ? 'snap-center' : ''}`}>
-            <div className="flex flex-col items-center justify-center gap-8 border-2 border-[#D7E2EA]/10 rounded-3xl w-full h-[48vh] sm:h-[50vh] bg-[#D7E2EA]/5 hover:bg-[#D7E2EA]/10 transition-colors duration-300">
-              <h3 className="text-[#D7E2EA] font-medium text-2xl sm:text-3xl uppercase tracking-widest text-center">
-                More Projects
-              </h3>
-              <a
-                href="/projects"
-                className="rounded-full bg-[#D7E2EA] text-[#0C0C0C]
-                  font-bold uppercase tracking-widest
-                  px-8 py-4 text-sm sm:text-base
-                  cursor-pointer transition-transform duration-200 hover:scale-105 shadow-xl"
-              >
+          {/* Final "Show More" Card - Identical size to project cards */}
+          <div className={`w-[75vw] sm:w-[45vw] md:w-[32vw] lg:w-[24vw] flex-shrink-0 h-full flex flex-col justify-center px-3 sm:px-4 ${isMobile ? 'snap-center' : ''}`}>
+            <a
+              href="/projects"
+              className="flex flex-col items-center justify-center gap-4 sm:gap-6 border border-[#D7E2EA]/10 rounded-3xl p-4 sm:p-5 h-[42vh] sm:h-[50vh] bg-[#111111]/80 hover:bg-[#1A1A1A] transition-colors duration-300 group/card shadow-2xl relative overflow-hidden text-center cursor-pointer"
+            >
+              <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-[#D7E2EA]/10 flex items-center justify-center text-[#D7E2EA] group-hover/card:scale-110 group-hover/card:bg-[#D7E2EA] group-hover/card:text-[#0C0C0C] transition-all duration-300 shadow-md">
+                <ArrowRight className="w-6 h-6 sm:w-7 sm:h-7" />
+              </div>
+              <div className="flex flex-col items-center gap-1 px-2">
+                <h3 className="text-[#D7E2EA] font-extrabold text-xl sm:text-2xl md:text-3xl uppercase tracking-wider">
+                  More Projects
+                </h3>
+                <p className="text-xs sm:text-sm text-[#D7E2EA]/60 font-light max-w-[210px] leading-relaxed">
+                  View complete showcase of web, mobile & 3D projects
+                </p>
+              </div>
+              <span className="rounded-full bg-[#D7E2EA] text-[#0C0C0C] font-bold uppercase tracking-widest px-6 py-2.5 sm:px-8 sm:py-3 text-xs sm:text-sm shadow-xl group-hover/card:scale-105 transition-transform duration-200 mt-1">
                 Show More
-              </a>
-            </div>
+              </span>
+            </a>
           </div>
         </div>
         
